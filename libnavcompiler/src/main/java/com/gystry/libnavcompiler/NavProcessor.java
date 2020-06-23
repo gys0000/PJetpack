@@ -29,9 +29,6 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-/**
- * 注解处理器
- */
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"com.gystry.libnavannotation.ActivityDestination", "com.gystry.libnavannotation.FragmentDestination"})
@@ -44,15 +41,12 @@ public class NavProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
-        //日志打印
         messager = processingEnvironment.getMessager();
-        //获取文件
         filer = processingEnvironment.getFiler();
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        //获取被这种类型注解的类的集合
         Set<? extends Element> fragmentElements = roundEnvironment.getElementsAnnotatedWith(FragmentDestination.class);
         Set<? extends Element> activityElements = roundEnvironment.getElementsAnnotatedWith(ActivityDestination.class);
         if (!fragmentElements.isEmpty() || !activityElements.isEmpty()) {
@@ -60,8 +54,7 @@ public class NavProcessor extends AbstractProcessor {
             handleDestination(fragmentElements, FragmentDestination.class, destMap);
             handleDestination(activityElements, ActivityDestination.class, destMap);
 
-            // /app/src/main/assets
-            //StandardLocation.CLASS_OUTPUT 是什么东西
+
 
             FileObject filerResource = null;
             try {
@@ -101,13 +94,11 @@ public class NavProcessor extends AbstractProcessor {
             TypeElement typeElement = (TypeElement) element;
             String pageUrl = null;
             String claszName = typeElement.getQualifiedName().toString();
-            //因为hasecode有可能为负值，id又不能为负值
             int id = Math.abs(claszName.hashCode());
             boolean needLogin = false;
             boolean asStater = false;
             boolean isFragment = false;
 
-            //通过反射获取注解类型
             Annotation annotation = typeElement.getAnnotation(annotationClaz);
             if (annotation instanceof FragmentDestination) {
                 FragmentDestination dest = (FragmentDestination) annotation;

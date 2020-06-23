@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.gystry.libnavannotation.FragmentDestination;
 import com.gystry.pjetpack.R;
 
+@FragmentDestination(pageUrl = "main/tabs/dash", asStarter = false)
 public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
