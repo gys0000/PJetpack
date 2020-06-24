@@ -5,6 +5,8 @@ import android.content.res.AssetManager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.gystry.pjetpack.model.BottomBar;
 import com.gystry.pjetpack.model.Destination;
 
 import java.io.BufferedReader;
@@ -21,13 +23,22 @@ import java.util.HashMap;
 public class AppConfig {
 
     private static HashMap<String, Destination> sDestConfig;
+    private static BottomBar bottomBar;
 
     public static HashMap<String, Destination> getDestConfig() {
         if (sDestConfig == null) {
             String s = parseFile("destnation.json");
-            sDestConfig = JSONObject.parseObject(s,new TypeReference<HashMap<String,Destination>>(){}.getType());
+            sDestConfig = JSON.parseObject(s,new TypeReference<HashMap<String,Destination>>(){}.getType());
         }
         return sDestConfig;
+    }
+
+    public static BottomBar getBottomBar(){
+        if (bottomBar==null) {
+            String s = parseFile("main_tabs_config.json");
+            bottomBar=JSON.parseObject(s,BottomBar.class);
+        }
+        return bottomBar;
     }
 
     private static String parseFile(String fileName) {
