@@ -7,8 +7,10 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author gystry
@@ -19,7 +21,7 @@ import java.io.Serializable;
 @Entity(tableName = "cache"
         //foreignKeys外键 这里将cache中的key和User中的id字段进行关联，并设置当cache中的key被删除和被更新时，user中的id的状态操作
 //        ,foreignKeys = {@ForeignKey(entity = User.class,parentColumns = "id",childColumns = "key",onDelete = ForeignKey.RESTRICT,onUpdate = ForeignKey.RESTRICT)}
-        )
+)
 public class Cache implements Serializable {
     //PrimaryKey 主键约束
     @PrimaryKey
@@ -34,4 +36,10 @@ public class Cache implements Serializable {
     //Embedded 注解的作用是，当cache被映射到数据表的时候，user中的字段也会被映射到cache表中
 //    @Embedded
 //    public User user;
+
+    /**
+     * 类型转换的类，date数据在存储数据的时候会自动调用dateconvert中的类型转换方法，将date转换类型之后存储
+     */
+    @TypeConverters(DateConvert.class)
+    public Date mDate;
 }
