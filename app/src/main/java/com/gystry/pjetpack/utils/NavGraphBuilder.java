@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphNavigator;
 import androidx.navigation.NavigatorProvider;
 import androidx.navigation.fragment.FragmentNavigator;
 
+import com.gystry.libcommon.AppGlobal;
 import com.gystry.pjetpack.model.Destination;
 
 import java.util.HashMap;

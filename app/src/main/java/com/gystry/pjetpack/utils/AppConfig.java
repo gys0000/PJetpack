@@ -3,9 +3,8 @@ package com.gystry.pjetpack.utils;
 import android.content.res.AssetManager;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.gystry.libcommon.AppGlobal;
 import com.gystry.pjetpack.model.BottomBar;
 import com.gystry.pjetpack.model.Destination;
 

@@ -1,4 +1,4 @@
-package com.gystry.pjetpack.utils;
+package com.gystry.libcommon;
 
 import android.app.Application;
 
@@ -18,7 +18,7 @@ public class AppGlobal {
         if (application==null) {
             try {
                 Method currentApplication = Class.forName("android.app.ActivityThread").getDeclaredMethod("currentApplication");
-                application = (Application) currentApplication.invoke(null, null);
+                application = (Application) currentApplication.invoke(null, (Object[]) null);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
