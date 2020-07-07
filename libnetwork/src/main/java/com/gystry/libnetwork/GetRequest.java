@@ -4,7 +4,7 @@ package com.gystry.libnetwork;
  * @author gystry
  * 创建日期：2020/7/3 17
  * 邮箱：gystry@163.com
- * 描述：
+ * 描述：GET类型网络请求
  */
 public class GetRequest<T> extends Request<T, GetRequest> {
     public GetRequest(String url) {
@@ -15,6 +15,7 @@ public class GetRequest<T> extends Request<T, GetRequest> {
     protected okhttp3.Request generateRequest(okhttp3.Request.Builder builder) {
         //将params拼接到url中
         String urlFromParams = UrlCreater.createUrlFromParams(mUrl, params);
-        return null;
+        okhttp3.Request request = builder.url(urlFromParams).get().build();
+        return request;
     }
 }

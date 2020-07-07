@@ -25,6 +25,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public class ApiService {
     public static final OkHttpClient okHttpClient;
+    public static String sBaseUrl;
+    public static Convert sConvert;
 
     static {
         //日志拦截器
@@ -74,6 +76,14 @@ public class ApiService {
             e.printStackTrace();
         }
 
+    }
+
+    public static void init(String baseUrl,Convert convert){
+        sBaseUrl = baseUrl;
+        if (convert ==null) {
+            convert =new JsonConvert();
+        }
+        sConvert = convert;
     }
 
 }

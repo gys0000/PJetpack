@@ -1,7 +1,10 @@
 package com.gystry.pjetpack.utils;
 
 import android.content.ComponentName;
+import android.content.Context;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.ActivityNavigator;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
@@ -9,6 +12,7 @@ import androidx.navigation.NavGraphNavigator;
 import androidx.navigation.NavigatorProvider;
 import androidx.navigation.fragment.FragmentNavigator;
 
+import com.gystry.pjetpack.FixFragmentNavigator;
 import com.gystry.libcommon.AppGlobal;
 import com.gystry.pjetpack.model.Destination;
 
@@ -21,16 +25,20 @@ import java.util.HashMap;
  * 描述：
  */
 public class NavGraphBuilder {
-    public static void build(NavController controller) {
+    public static void build(NavController controller, FragmentActivity activity,int containerId) {
         NavigatorProvider navigatorProvider = controller.getNavigatorProvider();
-        FragmentNavigator fragmentNavigator = navigatorProvider.getNavigator(FragmentNavigator.class);
+//        FragmentNavigator fragmentNavigator = navigatorProvider.getNavigator(FragmentNavigator.class);
+        FixFragmentNavigator fixFragmentNavigator = new FixFragmentNavigator(activity, activity.getSupportFragmentManager(), containerId);
         ActivityNavigator activityNavigator = navigatorProvider.getNavigator(ActivityNavigator.class);
+
+        navigatorProvider.addNavigator(fixFragmentNavigator);
+
         final NavGraph navGraph = new NavGraph(new NavGraphNavigator(navigatorProvider));
 
         HashMap<String, Destination> destConfig = AppConfig.getDestConfig();
         for (Destination value : destConfig.values()) {
             if (value.isFragment) {
-                final FragmentNavigator.Destination destination = fragmentNavigator.createDestination();
+                final FragmentNavigator.Destination destination = fixFragmentNavigator.createDestination();
                 destination.setClassName(value.claszName);
                 destination.setId(value.id);
                 destination.addDeepLink(value.pageUrl);

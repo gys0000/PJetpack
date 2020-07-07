@@ -1,12 +1,21 @@
 package com.gystry.libnetwork;
 
+import android.util.Log;
+
 import androidx.annotation.IntDef;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * @author gystry
@@ -29,6 +38,8 @@ public abstract class Request<T, R extends Request> {
     //先访问网络，成功后缓存到本地
     public static final int NET_CACHE = 4;
     private String cacheKey;
+    private Type mType;
+    private Class mClaz;
 
     //使用注解标注数据访问类型
     @IntDef({CACHE_ONLY, CACHE_FIRST, NET_CACHE, NET_ONLY})
@@ -81,10 +92,77 @@ public abstract class Request<T, R extends Request> {
     }
 
     /**
+     * 解决范型擦除的问题
+     *
+     * @param type
+     * @return
+     */
+    public R responseType(Type type) {
+        mType = type;
+        return (R) this;
+    }
+
+    public R responseType(Class claz) {
+        mClaz = claz;
+        return (R) this;
+    }
+
+    /**
      * 真正得网络请求，参数为callback的话就为异步，没有call就为同步
      */
-    public void execute(JsonCallback<T> callback) {
-        getCall();
+    public void enqueue(final JsonCallback<T> callback) {
+        getCall().enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                ApiResponse<T> response = new ApiResponse<>();
+                response.message = e.getMessage();
+                callback.onError(response);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                ApiResponse<T> apiResponse = parseResponse(response, callback);
+                if (apiResponse.success) {
+                    callback.onSuccess(apiResponse);
+                } else {
+                    callback.onError(apiResponse);
+                }
+
+            }
+        });
+    }
+
+    private ApiResponse<T> parseResponse(Response response, JsonCallback<T> callback) {
+        String message = null;
+        int status = response.code();
+        boolean success = response.isSuccessful();
+        ApiResponse<T> result = new ApiResponse<>();
+        Convert convert = ApiService.sConvert;
+        try {
+            String content = response.body().string();
+            if (success) {
+                if (callback != null) {
+                    ParameterizedType type = (ParameterizedType) callback.getClass().getGenericSuperclass();
+                    Type argument = type.getActualTypeArguments()[0];
+                    result.body = (T) convert.convert(content, argument);
+                } else if (mType != null) {
+                    result.body = (T) convert.convert(content, mType);
+                } else if (mClaz != null) {
+                    result.body = (T) convert.convert(content, mClaz);
+                } else {
+                    Log.e("request", "parseResponse 无法解析");
+                }
+            } else {
+                message = content;
+            }
+        } catch (Exception e) {
+            message = e.getMessage();
+            success = false;
+        }
+        result.success = success;
+        result.message = message;
+        result.status = status;
+        return result;
     }
 
     private Call getCall() {
@@ -103,6 +181,17 @@ public abstract class Request<T, R extends Request> {
         }
     }
 
-    public void execute() {
+    /**
+     * 同步请求
+     */
+    public ApiResponse<T> execute() {
+        try {
+            Response response = getCall().execute();
+            ApiResponse<T> result = parseResponse(response, null);
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
