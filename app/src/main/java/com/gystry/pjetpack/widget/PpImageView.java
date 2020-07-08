@@ -17,6 +17,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gystry.libcommon.PixUtils;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 /**
  * @author gystry
  * 创建日期：2020/7/8 10
@@ -85,4 +87,14 @@ public class PpImageView extends androidx.appcompat.widget.AppCompatImageView {
         setLayoutParams(layoutParams);
     }
 
+    public void setBlurImageUrl(String coverUrl, int radius) {
+        Glide.with(this).load(coverUrl).override(50)
+                .transform(new BlurTransformation())
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        setBackground(resource);
+                    }
+                });
+    }
 }
