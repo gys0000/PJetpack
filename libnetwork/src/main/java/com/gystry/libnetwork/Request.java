@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
 
 import com.gystry.libnetwork.cache.CacheManager;
@@ -29,7 +30,7 @@ import okhttp3.Response;
  * 邮箱：gystry@163.com
  * 描述：T 这个泛型指的是response的实体类类型，R 表示Request的子类
  */
-public abstract class Request<T, R extends Request> {
+public abstract class Request<T, R extends Request> implements Cloneable{
 
     public String mUrl;
     protected HashMap<String, String> headers = new HashMap<>();
@@ -127,7 +128,7 @@ public abstract class Request<T, R extends Request> {
      * 真正得网络请求，参数为callback的话就为异步，没有call就为同步
      */
     @SuppressLint("RestrictedApi")
-    public void enqueue(final JsonCallback<T> callback) {
+    public void execute(final JsonCallback<T> callback) {
         if (mCacheStrategy != NET_ONLY) {
             ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
                 @Override
@@ -255,5 +256,11 @@ public abstract class Request<T, R extends Request> {
             }
         }
         return result;
+    }
+
+    @NonNull
+    @Override
+    public Request clone() throws CloneNotSupportedException {
+        return ((Request<T, R>) super.clone());
     }
 }
