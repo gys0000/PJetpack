@@ -9,7 +9,7 @@ import com.gystry.pjetpack.ui.AbsListFragment;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 @FragmentDestination(pageUrl = "main/tabs/home", asStarter = true)
-public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
+public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     private HomeViewModel homeViewModel;
 
@@ -21,7 +21,7 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     @Override
     public PagedListAdapter getAdapter() {
         String feedType = getArguments() == null ? "all" : getArguments().getString("feedType");
-        return new FeedAdapter(getContext(),feedType);
+        return new FeedAdapter(getContext(), feedType);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
+        homeViewModel.getDataSource().invalidate();
     }
 }
