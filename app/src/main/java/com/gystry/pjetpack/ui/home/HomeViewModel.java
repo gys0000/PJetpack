@@ -24,7 +24,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
 
     @Override
     public DataSource createDataSource() {
-        return null;
+        return dataSource;
     }
 
     ItemKeyedDataSource<Integer, Feed> dataSource = new ItemKeyedDataSource<Integer, Feed>() {
