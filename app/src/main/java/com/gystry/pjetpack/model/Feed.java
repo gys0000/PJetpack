@@ -3,6 +3,7 @@ package com.gystry.pjetpack.model;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.Bindable;
 
 import java.io.Serializable;
 
@@ -32,6 +33,18 @@ public class Feed implements Serializable {
     public User author;
     public Comment topComment;
     public Ugc ugc;
+
+    @Bindable
+    public Ugc getUgc() {
+        if (ugc==null) {
+            ugc=new Ugc();
+        }
+        return ugc;
+    }
+
+    public void setUgc(Ugc ugc) {
+        this.ugc = ugc;
+    }
 
     @Override
     public boolean equals(@Nullable Object obj) {

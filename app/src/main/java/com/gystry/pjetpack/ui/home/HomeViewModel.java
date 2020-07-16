@@ -13,6 +13,7 @@ import com.gystry.libnetwork.JsonCallback;
 import com.gystry.libnetwork.Request;
 import com.gystry.pjetpack.AbsViewModel;
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.ui.login.UserManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,10 +58,13 @@ public class HomeViewModel extends AbsViewModel<Feed> {
 
     private void loadData(int key, ItemKeyedDataSource.LoadCallback<Feed> callback) {
 // /feeds/queryHotFeedsList
+//        if (key>0) {
+//            loadAfter.set(true);
+//        }
 
         Request request = ApiService.get("/feeds/queryHotFeedsList")
                 .addParams("feedType", null)
-                .addParams("userId", 0)
+                .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("feedId", key)
                 .addParams("pageCount", 10)
                 .responseType(new TypeReference<ArrayList<Feed>>() {
