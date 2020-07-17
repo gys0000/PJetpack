@@ -1,6 +1,7 @@
 package com.gystry.pjetpack.model;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.Bindable;
 
 import java.io.Serializable;
 
@@ -27,12 +28,19 @@ public class Comment implements Serializable {
     public boolean hasLiked;
     public User author;
     public Ugc ugc;
+
+    @Bindable
     public Ugc getUgc() {
         if (ugc == null) {
             ugc = new Ugc();
         }
         return ugc;
     }
+
+    public void setUgc(Ugc ugc) {
+        this.ugc = ugc;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || !(obj instanceof Comment))

@@ -23,6 +23,17 @@ public class Ugc extends BaseObservable implements Serializable {
     public boolean hasdiss;
     public boolean hasDissed;
 
+
+
+    @Bindable
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
+    }
+
     @Bindable
     public boolean isHasdiss() {
         return hasdiss;

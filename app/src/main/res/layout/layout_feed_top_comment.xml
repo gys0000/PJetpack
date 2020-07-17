@@ -8,11 +8,15 @@
         <variable
             name="comment"
             type="com.gystry.pjetpack.model.Comment" />
+        <variable
+            name="lifeCycleOwner"
+            type="androidx.lifecycle.LifecycleOwner" />
 
         <import type="android.text.TextUtils" />
 
         <import type="android.view.View" />
         <import type="com.gystry.pjetpack.utils.StringConvert"/>
+        <import type="com.gystry.pjetpack.ui.home.InteractionPresenter"/>
     </data>
 
     <FrameLayout
@@ -85,6 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_2"
+                    android:onClick="@{()->InteractionPresenter.toggleCommentLike(lifeCycleOwner,comment)}"
                     android:src="@{comment.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
                     tools:src="@drawable/icon_cell_liked">
 

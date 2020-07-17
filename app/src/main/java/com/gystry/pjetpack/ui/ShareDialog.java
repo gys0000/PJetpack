@@ -45,7 +45,7 @@ public class ShareDialog extends AlertDialog {
     private String shareContent;
     private View.OnClickListener listener;
 
-    protected ShareDialog(@NonNull Context context) {
+    public ShareDialog(@NonNull Context context) {
         super(context);
     }
 
@@ -62,6 +62,7 @@ public class ShareDialog extends AlertDialog {
         final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final int margin = PixUtils.dp2px(20);
         params.leftMargin = params.bottomMargin = params.rightMargin = params.topMargin = margin;
+        params.gravity=Gravity.CENTER;
         frameLayout.addView(gridView, params);
 
         setContentView(frameLayout);
