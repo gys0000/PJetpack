@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeImageBinding;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeVideoBinding;
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.widget.ListPlayerView;
 
 /**
  * @author gystry
@@ -28,7 +29,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     private Context context;
     private LayoutInflater inflater;
 
-    protected FeedAdapter(Context context,String category) {
+    protected FeedAdapter(Context context, String category) {
         //diffCallback 数据做差分比较时的回调
         super(new DiffUtil.ItemCallback<Feed>() {
             @Override
@@ -72,6 +73,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ViewDataBinding dataBinding;
+        private ListPlayerView listPlayerView;
 
         public ViewHolder(View root, ViewDataBinding dataBinding) {
             super(root);
@@ -84,12 +86,21 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
                 imageBinding.setFeed(item);
                 imageBinding.setLifecycleOwner((LifecycleOwner) context);
                 imageBinding.feedImage.bind(item.width, item.height, 16, item.cover);
-            }else {
+            } else {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) this.dataBinding;
                 videoBinding.setFeed(item);
                 videoBinding.setLifecycleOwner((LifecycleOwner) context);
-                videoBinding.listPlayerView.bindData(category,item.width,item.height,item.cover,item.url);
+                videoBinding.listPlayerView.bindData(category, item.width, item.height, item.cover, item.url);
+                listPlayerView = videoBinding.listPlayerView;
             }
+        }
+
+        public boolean isVideoItem() {
+            return dataBinding instanceof LayoutFeedTypeVideoBinding;
+        }
+
+        public ListPlayerView getListPlayerView() {
+            return listPlayerView;
         }
     }
 }

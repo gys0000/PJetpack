@@ -1,5 +1,6 @@
 package com.gystry.pjetpack.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +41,10 @@ import java.lang.reflect.Type;
 public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Fragment implements OnRefreshListener, OnLoadMoreListener {
     private LayoutRefreshViewBinding binding;
     private EmptyView emptyView;
-    private RecyclerView recyclerView;
+    protected RecyclerView recyclerView;
     private SmartRefreshLayout refreshLayout;
-    private PagedListAdapter<T, RecyclerView.ViewHolder> adapter;
-    private M mViewModel;
+    protected PagedListAdapter<T, RecyclerView.ViewHolder> adapter;
+    protected M mViewModel;
     private DividerItemDecoration decoration;
 
     @Nullable
@@ -83,13 +84,13 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
             Type argument = typeArguments[1];
             Class viewModelClaz = ((Class) argument).asSubclass(AbsViewModel.class);
             mViewModel = (M) ViewModelProviders.of(this).get(viewModelClaz);
-            mViewModel.getPageData().observe(this, new Observer<PagedList<T>>() {
+            mViewModel.getPageData().observe(getViewLifecycleOwner(), new Observer<PagedList<T>>() {
                 @Override
                 public void onChanged(PagedList<T> pagedList) {
                     adapter.submitList(pagedList);
                 }
             });
-            mViewModel.getBoundaryPageData().observe(this, new Observer<Boolean>() {
+            mViewModel.getBoundaryPageData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                 @Override
                 public void onChanged(Boolean aBoolean) {
                     finishRefresh(aBoolean);

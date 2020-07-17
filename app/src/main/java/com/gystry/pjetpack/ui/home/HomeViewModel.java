@@ -1,10 +1,14 @@
 package com.gystry.pjetpack.ui.home;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.arch.core.executor.ArchTaskExecutor;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 import androidx.paging.ItemKeyedDataSource;
+import androidx.paging.PagedList;
 
 import com.alibaba.fastjson.TypeReference;
 import com.gystry.libnetwork.ApiResponse;
@@ -13,34 +17,46 @@ import com.gystry.libnetwork.JsonCallback;
 import com.gystry.libnetwork.Request;
 import com.gystry.pjetpack.AbsViewModel;
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.ui.MutablePageKeyedDataSource;
 import com.gystry.pjetpack.ui.login.UserManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomeViewModel extends AbsViewModel<Feed> {
 
-    private volatile boolean withCache;
-
+    private volatile boolean withCache=true;
+    private AtomicBoolean loadAfter = new AtomicBoolean(false);
+    public MutableLiveData<PagedList<Feed>> cacheLiveData = new MutableLiveData<>();
+    private String mFeedType;
     @Override
     public DataSource createDataSource() {
         return dataSource;
+    }
+
+    public MutableLiveData<PagedList<Feed>> getCacheLiveData() {
+        return cacheLiveData;
+    }
+
+    public void setFeedType(String feedType) {
+
+        mFeedType = feedType;
     }
 
     ItemKeyedDataSource<Integer, Feed> dataSource = new ItemKeyedDataSource<Integer, Feed>() {
         @Override
         public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Feed> callback) {
             //做加载初始化数据的
-            //先加载缓存，再加载网络数据，最后网络数据加载回来再更新缓存
-            loadData(0, callback);
+            loadData(0,params.requestedLoadSize, callback);
             withCache = false;
         }
 
         @Override
         public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Feed> callback) {
             //做加载分页数据的
-            loadData(params.key, callback);
+            loadData(params.key,params.requestedLoadSize, callback);
         }
 
         @Override
@@ -56,17 +72,17 @@ public class HomeViewModel extends AbsViewModel<Feed> {
         }
     };
 
-    private void loadData(int key, ItemKeyedDataSource.LoadCallback<Feed> callback) {
+    private void loadData(int key, int count, ItemKeyedDataSource.LoadCallback<Feed> callback) {
 // /feeds/queryHotFeedsList
-//        if (key>0) {
-//            loadAfter.set(true);
-//        }
+        if (key > 0) {
+            loadAfter.set(true);
+        }
 
         Request request = ApiService.get("/feeds/queryHotFeedsList")
-                .addParams("feedType", null)
+                .addParams("feedType", mFeedType)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("feedId", key)
-                .addParams("pageCount", 10)
+                .addParams("pageCount", count)
                 .responseType(new TypeReference<ArrayList<Feed>>() {
                 }.getType());
         if (withCache) {
@@ -76,6 +92,11 @@ public class HomeViewModel extends AbsViewModel<Feed> {
                 @Override
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
                     Log.e("onCacheSuccess", "onCacheSuccess" + response.body.size());
+                    MutablePageKeyedDataSource<Feed> dataSource = new MutablePageKeyedDataSource<>();
+                    dataSource.data.addAll(response.body);
+
+                    PagedList<Feed> pagedList = dataSource.buildNewPagedList(config);
+                    cacheLiveData.postValue(pagedList);
                 }
             });
         }
@@ -91,12 +112,27 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             if (key > 0) {
                 //通过livedata发送数据，告诉ui层，是否应该主动关闭上拉加载分页的动画
                 getBoundaryPageData().postValue(data.size() > 0);
+                loadAfter.set(false);
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void loadAfter(int id, ItemKeyedDataSource.LoadCallback<Feed> callback) {
+        if (loadAfter.get()) {
+            callback.onResult(Collections.emptyList());
+        }
+
+        ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                loadData(id, config.pageSize, callback);
+            }
+        });
     }
 
 }

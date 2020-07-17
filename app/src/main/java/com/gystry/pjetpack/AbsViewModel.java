@@ -17,11 +17,12 @@ import androidx.paging.PagedList;
 public abstract class AbsViewModel<T> extends ViewModel {
 
     private LiveData<PagedList<T>> pageData;
-    private DataSource dataSource;
+    public DataSource dataSource;
     private MutableLiveData<Boolean> boundaryPageData=new MutableLiveData<>();
+    protected PagedList.Config config;
 
     public AbsViewModel() {
-        PagedList.Config config = new PagedList.Config.Builder()
+        config = new PagedList.Config.Builder()
                 .setPageSize(10)
                 .setInitialLoadSizeHint(10)//第一次加载数据的时候（初始化加载）加载的数据数量
 //                .setMaxSize(100)  最大数值

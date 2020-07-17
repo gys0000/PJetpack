@@ -91,6 +91,6 @@ public class InteractionPresenter {
     }
 
     public static void openShare(Context context,Feed feed){
-        
+
     }
 }
