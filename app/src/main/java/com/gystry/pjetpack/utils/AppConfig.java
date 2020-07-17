@@ -7,10 +7,14 @@ import com.alibaba.fastjson.TypeReference;
 import com.gystry.libcommon.AppGlobal;
 import com.gystry.pjetpack.model.BottomBar;
 import com.gystry.pjetpack.model.Destination;
+import com.gystry.pjetpack.model.SofaTab;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -23,6 +27,7 @@ public class AppConfig {
 
     private static HashMap<String, Destination> sDestConfig;
     private static BottomBar bottomBar;
+    private static SofaTab mSofaTab;
 
     public static HashMap<String, Destination> getDestConfig() {
         if (sDestConfig == null) {
@@ -38,6 +43,20 @@ public class AppConfig {
             bottomBar=JSON.parseObject(s,BottomBar.class);
         }
         return bottomBar;
+    }
+
+    public static SofaTab getSofaTab() {
+        if (mSofaTab == null) {
+            String s = parseFile("sofa_tabs_config.json");
+            mSofaTab = JSON.parseObject(s, SofaTab.class);
+            Collections.sort(mSofaTab.tabs, new Comparator<SofaTab.TabsBean>() {
+                @Override
+                public int compare(SofaTab.TabsBean o1, SofaTab.TabsBean o2) {
+                    return o1.index<o2.index?-1:1;
+                }
+            });
+        }
+        return mSofaTab;
     }
 
     private static String parseFile(String fileName) {

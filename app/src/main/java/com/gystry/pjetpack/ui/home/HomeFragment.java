@@ -25,6 +25,15 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     private HomeViewModel homeViewModel;
     private PageListPlayDetector pageListPlayDetector;
 
+    public static HomeFragment newInstance(String feedType) {
+
+        Bundle args = new Bundle();
+        args.putString("feedType",feedType);
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     protected void afterCreateView() {
 
