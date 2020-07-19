@@ -136,12 +136,17 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         PlayerControlView controlView = pageListPlay.controlView;
         ExoPlayer exoPlayer = pageListPlay.exoPlayer;
 
+        if (playerView==null) {
+            return;
+        }
 
         ViewParent parent = playerView.getParent();
         //将playview添加到容器中
         if (parent != this) {
             if (parent != null) {
                 ((ViewGroup) parent).removeView(playerView);
+                //还应该暂停掉列表上正在播放的那个
+                ((ListPlayerView) parent).inActive();
             }
             ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
             this.addView(playerView, 1, layoutParams);
@@ -150,7 +155,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         //将playview添加到容器中
         if (controlParent != this) {
             if (controlParent != null) {
-                ((ViewGroup) controlParent).removeView(playerView);
+                ((ViewGroup) controlParent).removeView(controlView);
             }
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.BOTTOM;

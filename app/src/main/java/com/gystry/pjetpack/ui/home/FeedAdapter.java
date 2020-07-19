@@ -12,6 +12,7 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gystry.pjetpack.BR;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeImageBinding;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeVideoBinding;
 import com.gystry.pjetpack.model.Feed;
@@ -81,15 +82,13 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
         }
 
         public void bindData(Feed item, int position) {
+            dataBinding.setVariable(BR.feed, item);
+            dataBinding.setVariable(BR.lifeCycleOwner, context);
             if (dataBinding instanceof LayoutFeedTypeImageBinding) {
                 LayoutFeedTypeImageBinding imageBinding = (LayoutFeedTypeImageBinding) this.dataBinding;
-                imageBinding.setFeed(item);
-                imageBinding.setLifecycleOwner((LifecycleOwner) context);
                 imageBinding.feedImage.bind(item.width, item.height, 16, item.cover);
             } else {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) this.dataBinding;
-                videoBinding.setFeed(item);
-                videoBinding.setLifecycleOwner((LifecycleOwner) context);
                 videoBinding.listPlayerView.bindData(category, item.width, item.height, item.cover, item.url);
                 listPlayerView = videoBinding.listPlayerView;
             }

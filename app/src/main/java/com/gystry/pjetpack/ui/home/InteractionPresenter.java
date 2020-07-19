@@ -1,6 +1,7 @@
 package com.gystry.pjetpack.ui.home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -38,6 +39,7 @@ public class InteractionPresenter {
     public static void toggleFeedLike(LifecycleOwner owner, Feed feed) {
         if (!UserManager.getInstance().isLogin()) {
             final LiveData<User> liveData = UserManager.getInstance().login(AppGlobal.getApplication());
+            Log.e("InteractionPresenter","---->"+owner);
             liveData.observe(owner, new Observer<User>() {
                 @Override
                 public void onChanged(User user) {

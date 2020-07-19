@@ -7,6 +7,9 @@
         <variable
             name="feed"
             type="com.gystry.pjetpack.model.Feed" />
+        <variable
+            name="lifeCycleOwner"
+            type="androidx.lifecycle.LifecycleOwner" />
 
     </data>
 
@@ -38,10 +41,12 @@
 
         <include
             layout="@layout/layout_feed_top_comment"
-            app:comment="@{feed.topComment}" />
+            app:comment="@{feed.topComment}"
+            app:lifeCycleOwner="@{lifeCycleOwner}"/>
 
         <include
             layout="@layout/layout_feed_interaction"
-            app:="@{feed}" />
+            app:feed="@{feed}"
+            app:lifeCycleOwner="@{lifeCycleOwner}"/>
     </LinearLayout>
 </layout>

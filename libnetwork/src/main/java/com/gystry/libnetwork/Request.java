@@ -79,7 +79,13 @@ public abstract class Request<T, R extends Request> implements Cloneable{
      * @return
      */
     public R addParams(String key, Object value) {
+        if (value==null) {
+            return ((R) this);
+        }
         try {
+            if (value.getClass()==String.class) {
+                params.put(key,value);
+            }
             //判断value是不是基本数据类型
             Field field = value.getClass().getField("TYPE");
             Class claz = (Class) field.get(null);

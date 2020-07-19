@@ -24,6 +24,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     private HomeViewModel homeViewModel;
     private PageListPlayDetector pageListPlayDetector;
+    private String feedType;
 
     public static HomeFragment newInstance(String feedType) {
 
@@ -48,12 +49,12 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
             }
         });
         pageListPlayDetector = new PageListPlayDetector(this, recyclerView);
-
+        mViewModel.setFeedType(feedType);
     }
 
     @Override
     public PagedListAdapter getAdapter() {
-        String feedType = getArguments() == null ? "all" : getArguments().getString("feedType");
+        feedType = getArguments() == null ? "all" : getArguments().getString("feedType");
         return new FeedAdapter(getContext(), feedType) {
             //检测当列表滑动的时候，内部的item进入和滑出屏幕
             @Override
@@ -97,7 +98,19 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        homeViewModel.getDataSource().invalidate();
+        //invalidate 之后Paging会重新创建一个DataSource 重新调用它的loadInitial方法加载初始化数据
+        //详情见：LivePagedListBuilder#compute方法
+        mViewModel.getDataSource().invalidate();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            pageListPlayDetector.onPause();
+        }else {
+            pageListPlayDetector.onResume();
+        }
     }
 
     @Override
@@ -106,9 +119,19 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         super.onPause();
     }
 
+
     @Override
     public void onResume() {
-        pageListPlayDetector.onResume();
+        //解决从后台进入沙发视频页面时，出现首页和沙发视频页面都同时播放的问题
+        if (getParentFragment()!=null) {
+            if (getParentFragment().isVisible()) {
+                pageListPlayDetector.onResume();
+            }
+        }else {
+            if (isVisible()) {
+                pageListPlayDetector.onResume();
+            }
+        }
         super.onResume();
     }
 }

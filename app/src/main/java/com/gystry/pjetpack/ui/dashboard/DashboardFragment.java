@@ -62,7 +62,7 @@ public class DashboardFragment extends Fragment {
         }
         viewpager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
 
-        viewpager.setAdapter(new FragmentStateAdapter(getChildFragmentManager(), getLifecycle()) {
+        viewpager.setAdapter(new FragmentStateAdapter(getChildFragmentManager(), this.getLifecycle()) {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
@@ -79,6 +79,8 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        tabLayout.setTabGravity(tabConfig.tabGravity);
+
         tabLayoutMediator = new TabLayoutMediator(tabLayout, viewpager, false, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -88,12 +90,12 @@ public class DashboardFragment extends Fragment {
         tabLayoutMediator.attach();
 
         viewpager.registerOnPageChangeCallback(onPageChangeCallback);
-        viewpager.postDelayed(new Runnable() {
+        viewpager.post(new Runnable() {
             @Override
             public void run() {
-                viewpager.setCurrentItem(tabConfig.select);
+                viewpager.setCurrentItem(tabConfig.select,false);
             }
-        }, 50);
+        });
     }
 
     ViewPager2.OnPageChangeCallback onPageChangeCallback = new ViewPager2.OnPageChangeCallback() {

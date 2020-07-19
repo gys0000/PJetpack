@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,9 +84,16 @@ public class PpImageView extends androidx.appcompat.widget.AppCompatImageView {
             finalHeight = maxHeight;
             finalWidth = (int) (width / (height * 1.0f / finalHeight));
         }
-        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(finalWidth, finalHeight);
-        layoutParams.leftMargin = height > width ? PixUtils.dp2px(marginLeft) : 0;
-        setLayoutParams(layoutParams);
+
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.width=finalWidth;
+        params.height=finalHeight;
+        if (params instanceof FrameLayout.LayoutParams) {
+            ((FrameLayout.LayoutParams) params).leftMargin = height > width ? PixUtils.dp2px(marginLeft) : 0;
+        }else if (params instanceof LinearLayout.LayoutParams){
+            ((LinearLayout.LayoutParams) params).leftMargin = height > width ? PixUtils.dp2px(marginLeft) : 0;
+        }
+        setLayoutParams(params);
     }
 
     public void setBlurImageUrl(String coverUrl, int radius) {

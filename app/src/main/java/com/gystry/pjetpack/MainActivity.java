@@ -10,6 +10,7 @@ import com.gystry.pjetpack.model.User;
 import com.gystry.pjetpack.ui.login.UserManager;
 import com.gystry.pjetpack.utils.AppConfig;
 import com.gystry.pjetpack.utils.NavGraphBuilder;
+import com.gystry.pjetpack.utils.StatusBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StatusBar.fitSystemBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navView = findViewById(R.id.nav_view);

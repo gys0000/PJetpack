@@ -69,34 +69,52 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
         decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_divider));
         recyclerView.addItemDecoration(decoration);
 
+        genericViewModel();
         afterCreateView();
         return binding.getRoot();
     }
 
     protected abstract void afterCreateView();
 
+    private void genericViewModel() {
+        //利用 子类传递的 泛型参数实例化出absViewModel 对象。
+        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+        Type[] arguments = type.getActualTypeArguments();
+        if (arguments.length > 1) {
+            Type argument = arguments[1];
+            Class modelClaz = ((Class) argument).asSubclass(AbsViewModel.class);
+            mViewModel = (M) ViewModelProviders.of(this).get(modelClaz);
+
+            //触发页面初始化数据加载的逻辑
+            mViewModel.getPageData().observe(this, pagedList -> submitList(pagedList));
+
+            //监听分页时有无更多数据,以决定是否关闭上拉加载的动画
+            mViewModel.getBoundaryPageData().observe(this, hasData -> finishRefresh(hasData));
+        }
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-        Type[] typeArguments = type.getActualTypeArguments();
-        if (typeArguments.length > 1) {
-            Type argument = typeArguments[1];
-            Class viewModelClaz = ((Class) argument).asSubclass(AbsViewModel.class);
-            mViewModel = (M) ViewModelProviders.of(this).get(viewModelClaz);
-            mViewModel.getPageData().observe(getViewLifecycleOwner(), new Observer<PagedList<T>>() {
-                @Override
-                public void onChanged(PagedList<T> pagedList) {
-                    adapter.submitList(pagedList);
-                }
-            });
-            mViewModel.getBoundaryPageData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean aBoolean) {
-                    finishRefresh(aBoolean);
-                }
-            });
-        }
+//        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+//        Type[] typeArguments = type.getActualTypeArguments();
+//        if (typeArguments.length > 1) {
+//            Type argument = typeArguments[1];
+//            Class viewModelClaz = ((Class) argument).asSubclass(AbsViewModel.class);
+//            mViewModel = (M) ViewModelProviders.of(this).get(viewModelClaz);
+//            mViewModel.getPageData().observe(getViewLifecycleOwner(), new Observer<PagedList<T>>() {
+//                @Override
+//                public void onChanged(PagedList<T> pagedList) {
+//                    adapter.submitList(pagedList);
+//                }
+//            });
+//            mViewModel.getBoundaryPageData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//                @Override
+//                public void onChanged(Boolean aBoolean) {
+//                    finishRefresh(aBoolean);
+//                }
+//            });
+//        }
     }
 
     public void submitList(PagedList<T> pagedList) {

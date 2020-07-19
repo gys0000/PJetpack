@@ -1,5 +1,6 @@
 package com.gystry.pjetpack.ui.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,7 +13,7 @@ import com.gystry.pjetpack.model.User;
 public class UserManager {
     public static final String KEY_CACHE_USER = "cache_user";
     private static UserManager mUserManager = new UserManager();
-    private MutableLiveData<User> userLiveData = new MutableLiveData<>();
+    private MutableLiveData<User> userLiveData ;
     private User mUser;
 
     public static UserManager getInstance(){
@@ -43,8 +44,11 @@ public class UserManager {
      */
     public LiveData<User> login(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         context.startActivity(intent);
-        return userLiveData;
+        return getUserLiveData();
     }
 
     public boolean isLogin() {
@@ -57,5 +61,11 @@ public class UserManager {
 
     public long getUserId() {
         return isLogin() ? mUser.userId : 0;
+    }
+    private MutableLiveData<User> getUserLiveData() {
+        if (userLiveData == null) {
+            userLiveData = new MutableLiveData<>();
+        }
+        return userLiveData;
     }
 }

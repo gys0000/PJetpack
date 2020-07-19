@@ -43,7 +43,7 @@ public class User implements Serializable {
                 && topCommentCount == newUser.topCommentCount
                 && followCount == newUser.followCount
                 && followerCount == newUser.followerCount
-                && qqOpenId.equals(newUser.qqOpenId)
+                && (qqOpenId != null && newUser.qqOpenId != null && qqOpenId.equals(newUser.qqOpenId))
                 && expires_time == newUser.expires_time
                 && score == newUser.score
                 && historyCount == newUser.historyCount

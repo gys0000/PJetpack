@@ -1,6 +1,7 @@
 package com.gystry.pjetpack.model;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * 邮箱：gystry@163.com
  * 描述：
  */
-public class Comment implements Serializable {
+public class Comment extends BaseObservable implements Serializable {
     public int id;
     public long itemId;
     public long commentId;

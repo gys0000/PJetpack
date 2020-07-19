@@ -77,7 +77,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
         if (key > 0) {
             loadAfter.set(true);
         }
-
+        Log.e("loadData", "----->" + mFeedType+":"+UserManager.getInstance().getUserId()+":"+key+":"+count);
         Request request = ApiService.get("/feeds/queryHotFeedsList")
                 .addParams("feedType", mFeedType)
                 .addParams("userId", UserManager.getInstance().getUserId())
@@ -91,12 +91,14 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             request.execute(new JsonCallback<List<Feed>>() {
                 @Override
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
-                    Log.e("onCacheSuccess", "onCacheSuccess" + response.body.size());
-                    MutablePageKeyedDataSource<Feed> dataSource = new MutablePageKeyedDataSource<>();
-                    dataSource.data.addAll(response.body);
+                    Log.e("onCacheSuccess", "onCacheSuccess" + response.body);
+                    if (response.body!=null) {
+                        MutablePageKeyedDataSource dataSource = new MutablePageKeyedDataSource<Feed>();
+                        dataSource.data.addAll(response.body);
 
-                    PagedList<Feed> pagedList = dataSource.buildNewPagedList(config);
-                    cacheLiveData.postValue(pagedList);
+                        PagedList<Feed> pagedList = dataSource.buildNewPagedList(config);
+                        cacheLiveData.postValue(pagedList);
+                    }
                 }
             });
         }
@@ -106,6 +108,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             //设置缓存模式，如果当前是第一个数据的话，那么就应该是下拉刷新，就将网络请求的数据缓存下来，要不然就不缓存
             netRequest.cacheStrategy(key == 0 ? Request.NET_CACHE : Request.NET_ONLY);
             ApiResponse<List<Feed>> response = netRequest.execute();
+            Log.e("loadData", "onCacheSuccess" + response.body);
             List<Feed> data = response.body == null ? Collections.emptyList() : response.body;
             callback.onResult(data);
 

@@ -8,7 +8,7 @@
         <variable
             name="feed"
             type="Feed" />
-        
+
         <variable
             name="lifeCycleOwner"
             type="androidx.lifecycle.LifecycleOwner" />

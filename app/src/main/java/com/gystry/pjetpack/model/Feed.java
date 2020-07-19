@@ -3,6 +3,7 @@ package com.gystry.pjetpack.model;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * 邮箱：gystry@163.com
  * 描述：
  */
-public class Feed implements Serializable {
+public class Feed extends BaseObservable implements Serializable {
     public static final int VIDEO_TYPE=2;//图文
     public static final int IMAGE_TYPE=1;//视频
     public int id;
@@ -64,7 +65,7 @@ public class Feed implements Serializable {
                 && height == newFeed.height
                 && TextUtils.equals(url, newFeed.url)
                 && TextUtils.equals(cover, newFeed.cover)
-                && (author != null && author.equals(newFeed.author))
+                && (author != null &&newFeed.author!=null&& author.equals(newFeed.author))
                 && (topComment != null && topComment.equals(newFeed.topComment))
                 && (ugc != null && ugc.equals(newFeed.ugc));
     }

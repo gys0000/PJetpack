@@ -18,13 +18,13 @@ import java.util.Date;
  * 邮箱：gystry@163.com
  * 描述：Entity 注解的作用是将一个class对象映射成数据库中一个数据表
  */
-@Entity(tableName = "cache"
+
         //foreignKeys外键 这里将cache中的key和User中的id字段进行关联，并设置当cache中的key被删除和被更新时，user中的id的状态操作
 //        ,foreignKeys = {@ForeignKey(entity = User.class,parentColumns = "id",childColumns = "key",onDelete = ForeignKey.RESTRICT,onUpdate = ForeignKey.RESTRICT)}
-)
+@Entity(tableName = "cache")
 public class Cache implements Serializable {
     //PrimaryKey 主键约束
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     @NonNull
     public String key;
 
@@ -40,6 +40,6 @@ public class Cache implements Serializable {
     /**
      * 类型转换的类，date数据在存储数据的时候会自动调用dateconvert中的类型转换方法，将date转换类型之后存储
      */
-    @TypeConverters(DateConvert.class)
-    public Date mDate;
+//    @TypeConverters(DateConvert.class)
+//    public Date mDate;
 }
