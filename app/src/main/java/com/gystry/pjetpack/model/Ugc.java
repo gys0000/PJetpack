@@ -23,7 +23,15 @@ public class Ugc extends BaseObservable implements Serializable {
     public boolean hasdiss;
     public boolean hasDissed;
 
+    @Bindable
+    public boolean isHasFavorite() {
+        return hasFavorite;
+    }
 
+    public void setHasFavorite(boolean hasFavorite) {
+        this.hasFavorite = hasFavorite;
+        notifyPropertyChanged(BR._all);
+    }
 
     @Bindable
     public int getShareCount() {

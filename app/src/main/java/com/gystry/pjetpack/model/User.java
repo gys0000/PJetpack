@@ -1,8 +1,13 @@
 package com.gystry.pjetpack.model;
 
+import android.database.Observable;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
+import com.gystry.pjetpack.BR;
 
 import java.io.Serializable;
 
@@ -12,7 +17,7 @@ import java.io.Serializable;
  * 邮箱：gystry@163.com
  * 描述：
  */
-public class User implements Serializable {
+public class User extends BaseObservable implements Serializable {
     public int id;
     public long userId;
     public String name;
@@ -30,6 +35,16 @@ public class User implements Serializable {
     public int favoriteCount;
     public int feedCount;
     public boolean hasFollow;
+
+    @Bindable
+    public boolean isHasFollow() {
+        return hasFollow;
+    }
+
+    public void setHasFollow(boolean hasFollow) {
+        this.hasFollow = hasFollow;
+        notifyPropertyChanged(BR._all);
+    }
 
     @Override
     public boolean equals(@Nullable Object obj) {

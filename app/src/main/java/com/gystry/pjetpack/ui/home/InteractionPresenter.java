@@ -1,9 +1,12 @@
 package com.gystry.pjetpack.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -39,7 +42,7 @@ public class InteractionPresenter {
     public static void toggleFeedLike(LifecycleOwner owner, Feed feed) {
         if (!UserManager.getInstance().isLogin()) {
             final LiveData<User> liveData = UserManager.getInstance().login(AppGlobal.getApplication());
-            Log.e("InteractionPresenter","---->"+owner);
+            Log.e("InteractionPresenter", "---->" + owner);
             liveData.observe(owner, new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
@@ -101,6 +104,7 @@ public class InteractionPresenter {
 
     /**
      * 打开分享弹窗
+     *
      * @param context
      * @param feed
      */
@@ -118,7 +122,7 @@ public class InteractionPresenter {
                             @Override
                             public void onSuccess(ApiResponse<JSONObject> response) {
                                 super.onSuccess(response);
-                                if (response.body!=null) {
+                                if (response.body != null) {
                                     int count = response.body.getIntValue("count");
                                     feed.getUgc().setShareCount(count);
                                 }
@@ -128,7 +132,7 @@ public class InteractionPresenter {
         });
     }
 
-    public static void toggleCommentLike(LifecycleOwner owner, Comment comment){
+    public static void toggleCommentLike(LifecycleOwner owner, Comment comment) {
         if (!UserManager.getInstance().isLogin()) {
             final LiveData<User> liveData = UserManager.getInstance().login(AppGlobal.getApplication());
             liveData.observe(owner, new Observer<User>() {
@@ -158,5 +162,90 @@ public class InteractionPresenter {
                         }
                     }
                 });
+    }
+
+    public static void toggleFeedFavorite(LifecycleOwner owner, Feed feed) {
+        if (!UserManager.getInstance().isLogin()) {
+            final LiveData<User> liveData = UserManager.getInstance().login(AppGlobal.getApplication());
+            liveData.observe(owner, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    if (user != null) {
+                        toggleFeedFavorite(feed);
+                    }
+                    liveData.removeObserver(this);
+                }
+            });
+        }
+        toggleFeedFavorite(feed);
+    }
+
+    private static void toggleFeedFavorite(Feed feed) {
+        ApiService.get("/ugc/toggleFavorite")
+                .addParams("itemId", feed.itemId)
+                .addParams("userId", UserManager.getInstance().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
+                            feed.getUgc().setHasFavorite(hasFavorite);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        super.onError(response);
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    //关注/取消关注一个用户
+    public static void toggleFollowUser(LifecycleOwner owner, Feed feed) {
+        if (!UserManager.getInstance().isLogin()) {
+            final LiveData<User> liveData = UserManager.getInstance().login(AppGlobal.getApplication());
+            liveData.observe(owner, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    if (user != null) {
+                        toggleFollowUser(feed);
+                    }
+                    liveData.removeObserver(this);
+                }
+            });
+        }
+        toggleFollowUser(feed);
+    }
+
+    public static void toggleFollowUser(Feed feed) {
+        ApiService.get("/ugc/toggleUserFollow")
+                .addParams("followUserId", UserManager.getInstance().getUserId())
+                .addParams("userId", feed.author.userId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFollow = response.body.getBooleanValue("hasLiked");
+                            feed.getAuthor().setHasFollow(hasFollow);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+
+    @SuppressLint("RestrictedApi")
+    private static void showToast(String message) {
+        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(AppGlobal.getApplication(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -52,4 +52,5 @@
     <string name="fragment_my_logout">确定要继续退出吗？</string>
     <string name="fragment_my_logout_ok">确定</string>
     <string name="fragment_my_logout_cancel">取消</string>
+    <string name="feed_comment_empty">还没有评论，快来抢一楼吧</string>
 </resources>

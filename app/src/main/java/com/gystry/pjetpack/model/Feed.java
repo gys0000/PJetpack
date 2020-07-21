@@ -15,8 +15,8 @@ import java.io.Serializable;
  * 描述：
  */
 public class Feed extends BaseObservable implements Serializable {
-    public static final int VIDEO_TYPE=2;//图文
-    public static final int IMAGE_TYPE=1;//视频
+    public static final int VIDEO_TYPE = 2;//图文
+    public static final int IMAGE_TYPE = 1;//视频
     public int id;
     public long itemId;
     public int itemType;
@@ -37,10 +37,22 @@ public class Feed extends BaseObservable implements Serializable {
 
     @Bindable
     public Ugc getUgc() {
-        if (ugc==null) {
-            ugc=new Ugc();
+        if (ugc == null) {
+            ugc = new Ugc();
         }
         return ugc;
+    }
+
+    @Bindable
+    public User getAuthor() {
+        if (author == null) {
+            author = new User();
+        }
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public void setUgc(Ugc ugc) {
@@ -65,7 +77,7 @@ public class Feed extends BaseObservable implements Serializable {
                 && height == newFeed.height
                 && TextUtils.equals(url, newFeed.url)
                 && TextUtils.equals(cover, newFeed.cover)
-                && (author != null &&newFeed.author!=null&& author.equals(newFeed.author))
+                && (author != null && newFeed.author != null && author.equals(newFeed.author))
                 && (topComment != null && topComment.equals(newFeed.topComment))
                 && (ugc != null && ugc.equals(newFeed.ugc));
     }

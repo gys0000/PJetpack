@@ -39,6 +39,8 @@
             tools:ignore="Instantiatable" />
 
         <activity android:name=".ui.login.LoginActivity"/>
+        <activity android:name=".ui.detail.FeedDetailActivity"
+            android:theme="@style/feedDetail"/>
         <!-- 注册SDKActivity -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"

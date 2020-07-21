@@ -16,6 +16,7 @@ import com.gystry.pjetpack.BR;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeImageBinding;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeVideoBinding;
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.ui.detail.FeedDetailActivity;
 import com.gystry.pjetpack.widget.ListPlayerView;
 
 /**
@@ -69,6 +70,13 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bindData(getItem(position), position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FeedDetailActivity.startFeedDetailActivity(context,getItem(position),category);
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

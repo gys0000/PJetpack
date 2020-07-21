@@ -66,6 +66,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:onClick="@{()->InteractionPresenter.toggleCommentLike(owner,feed)}"
                 android:orientation="vertical">
 
                 <!--                在imageview中添加图片没有使用src是因为在imageview类中没有setSrc方法，那么databinding就没办法动态设置图片-->
@@ -102,6 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_2"
+                    android:onClick="@{()->InteractionPresenter.toggleFeedFavorite(owner,feed)}"
                     android:background="@{feed.ugc.hasFavorite?@drawable/ic_collected:@drawable/ic_collect}"
                     android:backgroundTint="@{feed.ugc.hasFavorite?@color/color_theme:fullscreen?@color/color_white:@color/color_666}"
                     tools:src="@drawable/ic_collected">
@@ -125,6 +127,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:onClick="@{()->InteractionPresenter.openShare((Context)owner,feed)}"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatImageView
