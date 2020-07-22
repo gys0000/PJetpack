@@ -18,7 +18,7 @@
         <import type="android.content.Context" />
 
         <import type="com.gystry.pjetpack.model.Feed" />
-        <import type="com.gystry.pjetpack.ui.home.InteractionPresenter"/>
+        <import type="com.gystry.pjetpack.InteractionPresenter"/>
     </data>
 
     <LinearLayout

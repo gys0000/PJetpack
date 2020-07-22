@@ -17,7 +17,7 @@
 
         <import type="com.gystry.pjetpack.utils.TimeUtils"/>
 
-        <import type="com.gystry.pjetpack.ui.home.InteractionPresenter"/>
+        <import type="com.gystry.pjetpack.InteractionPresenter"/>
 
         <variable
             name="owner"

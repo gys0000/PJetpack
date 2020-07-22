@@ -7,12 +7,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gystry.libcommon.extention.LiveDataBus;
 import com.gystry.pjetpack.BR;
+import com.gystry.pjetpack.InteractionPresenter;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeImageBinding;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeVideoBinding;
 import com.gystry.pjetpack.model.Feed;
@@ -75,6 +79,19 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 FeedDetailActivity.startFeedDetailActivity(context,getItem(position),category);
+                LiveDataBus.getInstance().with(InteractionPresenter.DATA_FROM_INTERACTION)
+                        .observe(((LifecycleOwner) context), new Observer<Feed>() {
+                            @Override
+                            public void onChanged(Feed feed) {
+                                Feed item = getItem(position);
+                                if (item.id!=feed.id) {
+                                    return;
+                                }
+                                item.author=feed.author;
+                                item.ugc=feed.ugc;
+                                item.notifyChange();
+                            }
+                        });
             }
         });
     }

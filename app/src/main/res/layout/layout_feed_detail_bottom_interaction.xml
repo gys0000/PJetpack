@@ -14,7 +14,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.gystry.pjetpack.ui.home.InteractionPresenter" />
+        <import type="com.gystry.pjetpack.InteractionPresenter" />
 
         <import type="android.content.Context" />
 

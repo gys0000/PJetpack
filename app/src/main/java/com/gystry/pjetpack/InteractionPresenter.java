@@ -1,4 +1,4 @@
-package com.gystry.pjetpack.ui.home;
+package com.gystry.pjetpack;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,13 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gystry.libcommon.AppGlobal;
+import com.gystry.libcommon.extention.LiveDataBus;
 import com.gystry.libnetwork.ApiResponse;
 import com.gystry.libnetwork.ApiService;
 import com.gystry.libnetwork.JsonCallback;
@@ -34,6 +37,7 @@ import java.util.Date;
  */
 public class InteractionPresenter {
 
+    public static final String DATA_FROM_INTERACTION = "data_from_interaction";
     public static final String URL_TOGGLE_FEED_LIKE = "/ugc/toggleFeedLike";
     public static final String URL_TOGGLE_FEED_DISS = "/ugc/dissFeed";
     public static final String URL_SHARE = "/ugc/increaseShareCount";
@@ -66,6 +70,7 @@ public class InteractionPresenter {
                         if (response.body != null) {
                             boolean hasLiked = response.body.getBoolean("hasLiked");
                             feed.getUgc().setHasLiked(hasLiked);
+                            LiveDataBus.getInstance().with(DATA_FROM_INTERACTION).postValue(feed);
                         }
                     }
                 });
@@ -190,6 +195,7 @@ public class InteractionPresenter {
                         if (response.body != null) {
                             boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
                             feed.getUgc().setHasFavorite(hasFavorite);
+                            LiveDataBus.getInstance().with(DATA_FROM_INTERACTION).postValue(feed);
                         }
                     }
 
@@ -228,6 +234,7 @@ public class InteractionPresenter {
                         if (response.body != null) {
                             boolean hasFollow = response.body.getBooleanValue("hasLiked");
                             feed.getAuthor().setHasFollow(hasFollow);
+                            LiveDataBus.getInstance().with(DATA_FROM_INTERACTION).postValue(feed);
                         }
                     }
 
@@ -237,6 +244,37 @@ public class InteractionPresenter {
                     }
                 });
     }
+
+    public static LiveData<Boolean> deleteFeed(Context context, long itemId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(context)
+                .setNegativeButton("删除", (dialog, which) -> {
+                    dialog.dismiss();
+                    deleteFeedInternal(liveData, itemId);
+                }).setPositiveButton("取消", (dialog, which) -> dialog.dismiss()).setMessage("确定要删除这条评论吗？").create().show();
+        return liveData;
+    }
+
+    private static void deleteFeedInternal(MutableLiveData<Boolean> liveData, long itemId) {
+        ApiService.get("/feeds/deleteFeed")
+                .addParams("itemId", itemId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean success = response.body.getBoolean("result");
+                            liveData.postValue(success);
+                            showToast("删除成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
 
 
     @SuppressLint("RestrictedApi")

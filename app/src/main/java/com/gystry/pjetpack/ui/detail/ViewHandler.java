@@ -1,11 +1,14 @@
 package com.gystry.pjetpack.ui.detail;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +18,7 @@ import com.gystry.pjetpack.R;
 import com.gystry.pjetpack.databinding.LayoutFeedDetailBottomInteractionBinding;
 import com.gystry.pjetpack.model.Comment;
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.ui.MutableItemKeyDataSource;
 
 /**
  * @author gystry
@@ -29,6 +33,7 @@ public abstract class ViewHandler {
     protected RecyclerView mRecycleView;
     protected LayoutFeedDetailBottomInteractionBinding mInteractionBinding;
     protected FeedCommentAdapter listAdapter;
+    private CommentDialog commentDialog;
 
     public ViewHandler(FragmentActivity activity) {
         mActivity = activity;
@@ -49,6 +54,30 @@ public abstract class ViewHandler {
             public void onChanged(PagedList<Comment> comments) {
                 listAdapter.submitList(comments);
                 hasEmpty(comments.size() > 0);
+            }
+        });
+        mInteractionBinding.inputView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commentDialog = CommentDialog.newInstance(feed.itemId);
+                commentDialog.setCommentAddListener(new CommentDialog.CommentAddListener() {
+                    @Override
+                    public void onAddComment(Comment comment) {
+                        MutableItemKeyDataSource<Integer,Comment> mutableItemKeyDataSource=new MutableItemKeyDataSource<Integer, Comment>((ItemKeyedDataSource) viewModel.dataSource) {
+                            @NonNull
+                            @Override
+                            public Integer getKey(@NonNull Comment item) {
+                                return item.id;
+                            }
+
+                        };
+                        mutableItemKeyDataSource.data.add(comment);
+                        mutableItemKeyDataSource.data.addAll(listAdapter.getCurrentList());
+                        PagedList<Comment> comments = mutableItemKeyDataSource.buildNewPagedList(listAdapter.getCurrentList().getConfig());
+                        listAdapter.submitList(comments);
+                    }
+                });
+                commentDialog.show(mActivity.getSupportFragmentManager(),"comment_dialog");
             }
         });
     }
