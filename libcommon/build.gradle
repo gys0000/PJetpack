@@ -79,4 +79,12 @@ dependencies {
     //navigation 组件
     api 'androidx.navigation:navigation-fragment:2.2.2'
     api 'androidx.navigation:navigation-ui:2.2.2'
+
+    //camera
+    api 'androidx.camera:camera-core:1.0.0-alpha04'
+    api 'androidx.camera:camera-camera2:1.0.0-alpha04'
+    api 'androidx.camera:camera-view:1.0.0-alpha01'
+    api 'androidx.camera:camera-extensions:1.0.0-alpha01'
+    //gesture imageview
+    api 'com.github.chrisbanes:PhotoView:2.3.0@aar'
 }
