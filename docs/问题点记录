@@ -7,3 +7,5 @@ getDimensionPixelOffset/getDimensionPixelSize/getDimension区别
 exoplayer使用
 
  player.setPlayWhenReady
+
+ CoordinatorLayout和behavior

@@ -28,12 +28,12 @@ import com.gystry.pjetpack.exoplayer.PageListPlay;
 import com.gystry.pjetpack.exoplayer.PageListPlayManager;
 
 public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerControlView.VisibilityListener, Player.EventListener {
-    private ProgressBar bufferView;
-    private PpImageView cover, blur;
-    private ImageView playBtn;
-    private String mCategory;
-    private String mVideoUrl;
-    private boolean isPlaying;
+    protected ProgressBar bufferView;
+    protected PpImageView cover, blur;
+    protected ImageView playBtn;
+    protected String mCategory;
+    protected String mVideoUrl;
+    protected boolean isPlaying;
 
     public ListPlayerView(@NonNull Context context) {
         this(context, null);
@@ -44,7 +44,12 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     }
 
     public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr,0);
+
+    }
+
+    public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true);
         bufferView = findViewById(R.id.buffer_view);
         cover = findViewById(R.id.cover);
@@ -86,7 +91,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         setSize(widthPx, heightPx);
     }
 
-    private void setSize(int widthPx, int heightPx) {
+    protected void setSize(int widthPx, int heightPx) {
         int maxWidth = PixUtils.getScreenWidth();
         int maxHeight = maxWidth;
 
@@ -139,7 +144,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         if (playerView==null) {
             return;
         }
-
+pageListPlay.switchPlayerView(playerView);
         ViewParent parent = playerView.getParent();
         //将playview添加到容器中
         if (parent != this) {

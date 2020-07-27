@@ -75,12 +75,14 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Feed feed = getItem(position);
         holder.bindData(getItem(position), position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FeedDetailActivity.startFeedDetailActivity(context,getItem(position),category);
+                onStartFeedDetailActivity(feed);
                 LiveDataBus.getInstance().with(InteractionPresenter.DATA_FROM_INTERACTION)
                         .observe(((LifecycleOwner) context), new Observer<Feed>() {
                             @Override
@@ -96,6 +98,10 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
                         });
             }
         });
+    }
+
+    public void onStartFeedDetailActivity(Feed feed) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
