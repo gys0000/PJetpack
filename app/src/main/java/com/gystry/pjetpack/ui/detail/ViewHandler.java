@@ -1,5 +1,6 @@
 package com.gystry.pjetpack.ui.detail;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -46,7 +47,7 @@ public abstract class ViewHandler {
         mFeed = feed;
         mRecycleView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecycleView.setItemAnimator(null);
-        listAdapter = new FeedCommentAdapter();
+        listAdapter = new FeedCommentAdapter(mActivity);
         mRecycleView.setAdapter(listAdapter);
         viewModel.setItemId(mFeed.itemId);
         viewModel.getPageData().observe(mActivity, new Observer<PagedList<Comment>>() {
@@ -96,6 +97,12 @@ public abstract class ViewHandler {
                 emptyView.setTitle(mActivity.getString(R.string.feed_comment_empty));
                 listAdapter.addHeaderView(emptyView);
             }
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (commentDialog!=null&&commentDialog.isAdded()) {
+            commentDialog.onActivityResult(requestCode,resultCode,data);
         }
     }
 }

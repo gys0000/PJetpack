@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.ui.publish.CaptureActivity;
 
 /**
  * @author gystry
@@ -19,6 +20,7 @@ import com.gystry.pjetpack.model.Feed;
 public class FeedDetailActivity extends AppCompatActivity {
     public static final String KEY_FEED = "key_feed";
     public static final String KEY_CATEGORY = "key_category";
+    private ViewHandler viewHandler;
 
     /**
      * category 视频详情页做无缝续播时候使用
@@ -42,7 +44,6 @@ public class FeedDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
-        ViewHandler viewHandler = null;
         if (feed.itemType == Feed.IMAGE_TYPE) {
             viewHandler = new ImageViewHandler(this);
         } else {
@@ -50,5 +51,13 @@ public class FeedDetailActivity extends AppCompatActivity {
         }
 
         viewHandler.bindInitData(feed);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (viewHandler!=null) {
+            viewHandler.onActivityResult(requestCode,resultCode,data);
+        }
     }
 }

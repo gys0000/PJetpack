@@ -1,5 +1,6 @@
 package com.gystry.pjetpack.ui.detail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.gystry.pjetpack.databinding.LayoutFeedCommentListItemBinding;
 import com.gystry.pjetpack.model.Comment;
 import com.gystry.pjetpack.ui.MutableItemKeyDataSource;
 import com.gystry.pjetpack.ui.login.UserManager;
+import com.gystry.pjetpack.ui.publish.PreviewActivity;
 
 import static android.view.View.VISIBLE;
 
@@ -87,6 +89,14 @@ public class FeedCommentAdapter extends AbsPageListAdapter<Comment, FeedCommentA
             });
         });
 
+        holder.mListItemBinding.commentCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isVideo = item.commentType == Comment.COMMENT_TYPE_VIDEO;
+                PreviewActivity.startActivityForResult((Activity) context, isVideo ? item.videoUrl : item.imageUrl, isVideo, null);
+
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

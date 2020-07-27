@@ -87,4 +87,6 @@ dependencies {
     api 'androidx.camera:camera-extensions:1.0.0-alpha01'
     //gesture imageview
     api 'com.github.chrisbanes:PhotoView:2.3+'
+    //aliyun oss
+    api 'com.aliyun.dpa:oss-android-sdk:+'
 }

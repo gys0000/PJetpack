@@ -53,6 +53,10 @@ public class PpImageView extends androidx.appcompat.widget.AppCompatImageView {
         builder.into(view);
     }
 
+    public void setImageUrl(String imageUrl) {
+        setImageUrl(this, imageUrl, false);
+    }
+
     public void bind(int widthPx, int heightPx, int marginLeft, String imgUrl){
         bind(widthPx,heightPx,marginLeft,PixUtils.getScreenWidth(),PixUtils.getScreenWidth(),imgUrl);
     }
