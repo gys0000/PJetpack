@@ -34,6 +34,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     protected String mCategory;
     protected String mVideoUrl;
     protected boolean isPlaying;
+    protected int mWidthPx;
+    protected int mHeightPx;
 
     public ListPlayerView(@NonNull Context context) {
         this(context, null);
@@ -78,6 +80,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     public void bindData(String category, int widthPx, int heightPx, String coverUrl, String videoUrl) {
         mCategory = category;
         mVideoUrl = videoUrl;
+        mWidthPx = widthPx;
+        mHeightPx = heightPx;
 
         cover.setImageUrl(cover, coverUrl, false);
 

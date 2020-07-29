@@ -9,3 +9,5 @@ exoplayer使用
  player.setPlayWhenReady
 
  CoordinatorLayout和behavior
+
+ mScrollingView.canScrollVertically(-1)

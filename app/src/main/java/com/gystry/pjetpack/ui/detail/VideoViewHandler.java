@@ -2,6 +2,8 @@ package com.gystry.pjetpack.ui.detail;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.exoplayer2.ui.PlayerView;
+
 /**
  * @author gystry
  * 创建日期：2020/7/21 11
@@ -11,5 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 public class VideoViewHandler extends ViewHandler {
     public VideoViewHandler(FragmentActivity activity) {
         super(activity);
+
+
     }
 }

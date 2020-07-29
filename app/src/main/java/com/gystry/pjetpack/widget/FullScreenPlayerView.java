@@ -118,4 +118,29 @@ public class FullScreenPlayerView extends ListPlayerView {
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
         pageListPlay.switchPlayerView(null);
     }
+
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        if (mHeightPx > mWidthPx) {
+            int layoutWidth = params.width;
+            int layoutHeight = params.height;
+            ViewGroup.LayoutParams coverLayoutParams = cover.getLayoutParams();
+            coverLayoutParams.width = (int) (mWidthPx / mHeightPx * 1.0f / layoutHeight);
+            coverLayoutParams.height = layoutHeight;
+
+            cover.setLayoutParams(coverLayoutParams);
+            if (exoPlayerView != null) {
+                ViewGroup.LayoutParams layoutParams = exoPlayerView.getLayoutParams();
+                if (layoutParams != null) {
+                    float scaleX = coverLayoutParams.width * 1.0f / layoutParams.width;
+                    float scaleY = coverLayoutParams.height * 1.0f / layoutParams.height;
+
+                    exoPlayerView.setScaleX(scaleX);
+                    exoPlayerView.setScaleY(scaleY);
+                }
+            }
+        }
+
+        super.setLayoutParams(params);
+    }
 }
