@@ -20,7 +20,9 @@ public class ViewAnchorBehavior extends CoordinatorLayout.Behavior<View> {
     private int anchorId;
     private int extraUsed;
 
-    public ViewAnchorBehavior() {
+    public ViewAnchorBehavior(int player_view) {
+        anchorId=player_view;
+        extraUsed = PixUtils.dp2px(48);
     }
 
     /**
@@ -93,6 +95,15 @@ public class ViewAnchorBehavior extends CoordinatorLayout.Behavior<View> {
      */
     @Override
     public boolean onLayoutChild(@NonNull CoordinatorLayout parent, @NonNull View child, int layoutDirection) {
-        return super.onLayoutChild(parent, child, layoutDirection);
+        View anchorView = parent.findViewById(anchorId);
+        if (anchorView==null) {
+            return false;
+        }
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
+        int topMargin = params.topMargin;
+        int bottom = anchorView.getBottom();
+        parent.onLayoutChild(child,layoutDirection);
+        child.offsetTopAndBottom(bottom+topMargin);
+        return true;
     }
 }

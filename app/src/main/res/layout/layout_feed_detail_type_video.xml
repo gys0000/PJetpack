@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_10"
             android:overScrollMode="never"
+            app:layout_behavior=".ui.detail.ViewAnchorBehavior"
             app:anchorId="@+id/author_info"/>
 
         <include
