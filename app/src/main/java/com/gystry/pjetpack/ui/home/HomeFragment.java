@@ -25,12 +25,12 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     private HomeViewModel homeViewModel;
     private PageListPlayDetector pageListPlayDetector;
     private String feedType;
-    private boolean shouldPause=true;
+    private boolean shouldPause = true;
 
     public static HomeFragment newInstance(String feedType) {
 
         Bundle args = new Bundle();
-        args.putString("feedType",feedType);
+        args.putString("feedType", feedType);
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
@@ -77,6 +77,17 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
                 boolean isVideo = feed.itemType == Feed.VIDEO_TYPE;
                 shouldPause = !isVideo;
             }
+
+            @Override
+            public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
+                //这个方法是在我们每提交一次 pagelist对象到adapter就会触发一次
+                //每调用一次adapter.submitlist
+                if (previousList != null && currentList != null) {
+                    if (!currentList.containsAll(previousList)) {
+                        recyclerView.scrollToPosition(0);
+                    }
+                }
+            }
         };
     }
 
@@ -115,7 +126,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         super.onHiddenChanged(hidden);
         if (hidden) {
             pageListPlayDetector.onPause();
-        }else {
+        } else {
             pageListPlayDetector.onResume();
         }
     }
@@ -132,11 +143,11 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     @Override
     public void onResume() {
         //解决从后台进入沙发视频页面时，出现首页和沙发视频页面都同时播放的问题
-        if (getParentFragment()!=null) {
+        if (getParentFragment() != null) {
             if (getParentFragment().isVisible()) {
                 pageListPlayDetector.onResume();
             }
-        }else {
+        } else {
             if (isVisible()) {
                 pageListPlayDetector.onResume();
             }
