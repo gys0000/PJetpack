@@ -21,6 +21,7 @@ import com.gystry.libnetwork.ApiService;
 import com.gystry.libnetwork.JsonCallback;
 import com.gystry.pjetpack.model.Comment;
 import com.gystry.pjetpack.model.Feed;
+import com.gystry.pjetpack.model.TagList;
 import com.gystry.pjetpack.model.User;
 import com.gystry.pjetpack.ui.ShareDialog;
 import com.gystry.pjetpack.ui.login.UserManager;
@@ -275,8 +276,6 @@ public class InteractionPresenter {
                 });
     }
 
-
-
     @SuppressLint("RestrictedApi")
     private static void showToast(String message) {
         ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
@@ -285,5 +284,43 @@ public class InteractionPresenter {
                 Toast.makeText(AppGlobal.getApplication(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    //关注/取消关注一个帖子标签
+    public static void toggleTagLike(LifecycleOwner owner, TagList tagList) {
+        if (!UserManager.getInstance().isLogin()) {
+            final LiveData<User> liveData = UserManager.getInstance().login(AppGlobal.getApplication());
+            liveData.observe(owner, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    if (user != null) {
+                        toggleTagLikeInternal(tagList);
+                    }
+                    liveData.removeObserver(this);
+                }
+            });
+        }
+        toggleTagLikeInternal(tagList);
+    }
+
+    private static void toggleTagLikeInternal(TagList tagList) {
+        ApiService.get("/tag/toggleTagFollow")
+                .addParams("tagId", tagList.tagId)
+                .addParams("userId", UserManager.getInstance().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            Boolean follow = response.body.getBoolean("hasFollow");
+                            tagList.setHasFollow(follow);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
     }
 }

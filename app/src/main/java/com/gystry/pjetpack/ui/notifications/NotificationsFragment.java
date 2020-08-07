@@ -1,6 +1,7 @@
 package com.gystry.pjetpack.ui.notifications;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +15,36 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.gystry.libnavannotation.FragmentDestination;
 import com.gystry.pjetpack.R;
+import com.gystry.pjetpack.model.SofaTab;
+import com.gystry.pjetpack.ui.dashboard.DashboardFragment;
+import com.gystry.pjetpack.utils.AppConfig;
 
 @FragmentDestination(pageUrl = "main/tabs/notification", asStarter = false)
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends DashboardFragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    @Override
+    protected Fragment getTabFragment(int position) {
+        TagListFragment tagListFragment = TagListFragment.newInstance(getTabConfig().tabs.get(position).tag);
+        return tagListFragment;
+    }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+    @Override
+    protected SofaTab getTabConfig() {
+        return AppConfig.getFindTab();
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        String tagType = childFragment.getArguments().getString(TagListFragment.KEY_TAG_TYPE);
+        if (TextUtils.equals(tagType, "onlyFollow")) {
+            ViewModelProviders.of(childFragment).get(TagListViewModel.class)
+                    .getSwitchTabLiveData().observe(this, new Observer() {
+                @Override
+                public void onChanged(Object o) {
+                    viewpager.setCurrentItem(1);
+                }
+            });
+        }
     }
 }

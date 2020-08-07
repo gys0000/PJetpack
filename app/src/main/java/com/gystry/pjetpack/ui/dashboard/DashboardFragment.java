@@ -35,7 +35,7 @@ public class DashboardFragment extends Fragment {
 
 
     private FragmentDashboardBinding dashboardBinding;
-    private ViewPager2 viewpager;
+    protected ViewPager2 viewpager;
     private TabLayout tabLayout;
     private SofaTab tabConfig;
     private List<SofaTab.TabsBean> tabs;
@@ -132,11 +132,11 @@ public class DashboardFragment extends Fragment {
         return tabView;
     }
 
-    private Fragment getTabFragment(int position) {
+    protected Fragment getTabFragment(int position) {
         return HomeFragment.newInstance(tabs.get(position).tag);
     }
 
-    private SofaTab getTabConfig() {
+    protected SofaTab getTabConfig() {
         return AppConfig.getSofaTab();
     }
 
