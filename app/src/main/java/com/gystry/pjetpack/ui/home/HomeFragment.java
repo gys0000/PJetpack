@@ -37,11 +37,6 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     }
 
     @Override
-    protected void afterCreateView() {
-
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mViewModel.getCacheLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Feed>>() {
             @Override

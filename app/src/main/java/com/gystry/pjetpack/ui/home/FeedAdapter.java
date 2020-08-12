@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewConfigurationCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
@@ -16,9 +18,11 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gystry.libcommon.extention.AbsPageListAdapter;
 import com.gystry.libcommon.extention.LiveDataBus;
 import com.gystry.pjetpack.BR;
 import com.gystry.pjetpack.InteractionPresenter;
+import com.gystry.pjetpack.R;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeImageBinding;
 import com.gystry.pjetpack.databinding.LayoutFeedTypeVideoBinding;
 import com.gystry.pjetpack.model.Feed;
@@ -31,11 +35,11 @@ import com.gystry.pjetpack.widget.ListPlayerView;
  * 邮箱：gystry@163.com
  * 描述：
  */
-public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
+public class FeedAdapter extends AbsPageListAdapter<Feed, FeedAdapter.ViewHolder> {
 
-    private final String category;
-    private Context context;
-    private LayoutInflater inflater;
+    protected String category;
+    protected Context context;
+    protected final LayoutInflater inflater;
 
     protected FeedAdapter(Context context, String category) {
         //diffCallback 数据做差分比较时的回调
@@ -56,45 +60,44 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public int getItemViewType2(int position) {
         Feed feed = getItem(position);
-        return feed.itemType;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ViewDataBinding dataBinding = null;
-        if (viewType == Feed.IMAGE_TYPE) {
-            dataBinding = LayoutFeedTypeImageBinding.inflate(inflater, parent, false);
-        } else {
-            dataBinding = LayoutFeedTypeVideoBinding.inflate(inflater, parent, false);
+        if (feed.itemType == Feed.IMAGE_TYPE) {
+            return R.layout.layout_feed_type_image;
+        } else if (feed.itemType == Feed.VIDEO_TYPE) {
+            return R.layout.layout_feed_type_video;
         }
-        return new ViewHolder(dataBinding.getRoot(), dataBinding);
+        return 0;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Feed feed = getItem(position);
-        holder.bindData(getItem(position), position);
+    protected ViewHolder onCreateViewHolder2(ViewGroup parent, int viewType) {
+        ViewDataBinding binding = DataBindingUtil.inflate(inflater, viewType, parent, false);
+        return new ViewHolder(binding.getRoot(), binding);
+    }
+
+    @Override
+    protected void onBindViewHolder2(ViewHolder holder, int position) {
+        final Feed feed = getItem(position);
+        holder.bindData(feed);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FeedDetailActivity.startFeedDetailActivity(context,getItem(position),category);
+                FeedDetailActivity.startFeedDetailActivity(context, feed, category);
                 onStartFeedDetailActivity(feed);
-                LiveDataBus.getInstance().with(InteractionPresenter.DATA_FROM_INTERACTION)
-                        .observe(((LifecycleOwner) context), new Observer<Feed>() {
+                LiveDataBus.getInstance()
+                        .with(InteractionPresenter.DATA_FROM_INTERACTION)
+                        .observe((LifecycleOwner) context, new Observer<Feed>() {
                             @Override
-                            public void onChanged(Feed feed) {
-                                Feed item = getItem(position);
-                                if (item.id!=feed.id) {
+                            public void onChanged(Feed newOne) {
+                                if (feed.id != newOne.id)
                                     return;
-                                }
-                                item.author=feed.author;
-                                item.ugc=feed.ugc;
-                                item.notifyChange();
+                                feed.author = newOne.author;
+                                feed.ugc = newOne.ugc;
+                                feed.notifyChange();
                             }
+
                         });
             }
         });
@@ -106,19 +109,21 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ViewDataBinding dataBinding;
-        private ListPlayerView listPlayerView;
+        public ViewDataBinding dataBinding;
+        public ListPlayerView listPlayerView;
+        public ImageView feedImage;
 
         public ViewHolder(View root, ViewDataBinding dataBinding) {
             super(root);
             this.dataBinding = dataBinding;
         }
 
-        public void bindData(Feed item, int position) {
+        public void bindData(Feed item) {
             dataBinding.setVariable(BR.feed, item);
             dataBinding.setVariable(BR.lifeCycleOwner, context);
             if (dataBinding instanceof LayoutFeedTypeImageBinding) {
                 LayoutFeedTypeImageBinding imageBinding = (LayoutFeedTypeImageBinding) this.dataBinding;
+                feedImage = imageBinding.feedImage;
                 imageBinding.feedImage.bind(item.width, item.height, 16, item.cover);
             } else {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) this.dataBinding;

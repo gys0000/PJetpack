@@ -39,14 +39,8 @@ public class TagListFragment extends AbsListFragment<TagList, TagListViewModel> 
     }
 
     @Override
-    protected void afterCreateView() {
-
-    }
-
-    @Override
     public PagedListAdapter getAdapter() {
         tagType = getArguments().getString(KEY_TAG_TYPE);
-        mViewModel.setTagType(tagType);
         TagListAdapter tagListAdapter = new TagListAdapter(getContext());
         return tagListAdapter;
     }
@@ -63,6 +57,8 @@ public class TagListFragment extends AbsListFragment<TagList, TagListViewModel> 
                 }
             });
         }
+        recyclerView.removeItemDecorationAt(0);
+        mViewModel.setTagType(tagType);
     }
 
     @Override
@@ -73,19 +69,22 @@ public class TagListFragment extends AbsListFragment<TagList, TagListViewModel> 
         mViewModel.loadData(tagId, new ItemKeyedDataSource.LoadCallback<TagList>() {
             @Override
             public void onResult(@NonNull List data) {
-                MutableItemKeyDataSource<Long, TagList> mutableItemKeyDataSource = new MutableItemKeyDataSource<Long, TagList>((ItemKeyedDataSource) mViewModel.getDataSource()) {
-                    @NonNull
-                    @Override
-                    public Long getKey(@NonNull TagList item) {
-                        return item.tagId;
-                    }
-                };
-                mutableItemKeyDataSource.data.addAll(currentList);
-                mutableItemKeyDataSource.data.addAll(data);
-                PagedList<TagList> tagLists = mutableItemKeyDataSource.buildNewPagedList(currentList.getConfig());
-                if (data.size() > 0) {
+                if (data != null && data.size() > 0) {
+                    MutableItemKeyDataSource<Long, TagList> mutableItemKeyDataSource = new MutableItemKeyDataSource<Long, TagList>((ItemKeyedDataSource) mViewModel.getDataSource()) {
+                        @NonNull
+                        @Override
+                        public Long getKey(@NonNull TagList item) {
+                            return item.tagId;
+                        }
+                    };
+                    mutableItemKeyDataSource.data.addAll(currentList);
+                    mutableItemKeyDataSource.data.addAll(data);
+                    PagedList<TagList> tagLists = mutableItemKeyDataSource.buildNewPagedList(currentList.getConfig());
                     submitList(tagLists);
+                } else {
+                    finishRefresh(false);
                 }
+
             }
         });
 

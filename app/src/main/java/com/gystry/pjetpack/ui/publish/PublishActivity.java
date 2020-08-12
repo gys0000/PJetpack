@@ -24,7 +24,6 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gystry.libcommon.FileUtils;
@@ -38,7 +37,6 @@ import com.gystry.pjetpack.databinding.ActivityLayoutPublishBinding;
 import com.gystry.pjetpack.model.Feed;
 import com.gystry.pjetpack.model.TagList;
 import com.gystry.pjetpack.ui.login.UserManager;
-import com.gystry.pjetpack.ui.mine.TagBottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,8 +105,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 height = 0;
                 isVideo = false;
                 break;
-        }
-    }
+    }        }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void publish() {

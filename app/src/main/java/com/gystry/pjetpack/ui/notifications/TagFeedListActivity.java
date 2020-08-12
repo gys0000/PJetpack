@@ -1,5 +1,7 @@
 package com.gystry.pjetpack.ui.notifications;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,6 +56,11 @@ public class TagFeedListActivity extends AppCompatActivity implements View.OnCli
     private TagFeedListViewModel tagFeedListViewModel;
     private boolean shouldPause;
     private int totalScrollY;
+    public static void startActivity(Context context, TagList tagList) {
+        Intent intent = new Intent(context, TagFeedListActivity.class);
+        intent.putExtra(KEY_TAG_LIST, tagList);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

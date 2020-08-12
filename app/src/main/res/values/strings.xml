@@ -53,4 +53,10 @@
     <string name="fragment_my_logout_ok">确定</string>
     <string name="fragment_my_logout_cancel">取消</string>
     <string name="feed_comment_empty">还没有评论，快来抢一楼吧</string>
+
+    <string-array name="profile_tabs">
+        <item>动态</item>
+        <item>帖子</item>
+        <item>评论</item>
+    </string-array>
 </resources>

@@ -42,7 +42,7 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
     private LayoutRefreshViewBinding binding;
     public EmptyView emptyView;
     protected RecyclerView recyclerView;
-    private SmartRefreshLayout refreshLayout;
+    protected SmartRefreshLayout refreshLayout;
     protected PagedListAdapter<T, RecyclerView.ViewHolder> adapter;
     protected M mViewModel;
     private DividerItemDecoration decoration;
@@ -70,11 +70,8 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
         recyclerView.addItemDecoration(decoration);
 
         genericViewModel();
-        afterCreateView();
         return binding.getRoot();
     }
-
-    protected abstract void afterCreateView();
 
     private void genericViewModel() {
         //利用 子类传递的 泛型参数实例化出absViewModel 对象。

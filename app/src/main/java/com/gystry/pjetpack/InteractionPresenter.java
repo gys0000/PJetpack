@@ -323,4 +323,38 @@ public class InteractionPresenter {
                     }
                 });
     }
+
+
+    //删除某个帖子的一个评论
+    public static LiveData<Boolean> deleteFeedComment(Context context, long itemId, long commentId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(context)
+                .setNegativeButton("删除", (dialog, which) -> {
+                    dialog.dismiss();
+                    deleteFeedCommentInternal(liveData, itemId, commentId);
+                }).setPositiveButton("取消", (dialog, which) -> dialog.dismiss()).setMessage("确定要删除这条评论吗？").create().show();
+        return liveData;
+    }
+
+    private static void deleteFeedCommentInternal(LiveData liveData, long itemId, long commentId) {
+        ApiService.get("/comment/deleteComment")
+                .addParams("userId", UserManager.getInstance().getUserId())
+                .addParams("commentId", commentId)
+                .addParams("itemId", itemId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean result = response.body.getBooleanValue("result");
+                            ((MutableLiveData) liveData).postValue(result);
+                            showToast("评论删除成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
 }

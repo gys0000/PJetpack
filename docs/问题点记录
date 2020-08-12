@@ -1,6 +1,6 @@
 ConcurrentHashMap这个类的特点？
 
-LayoutCommentDialogBinding.inflate()和DataBindingUtil.setContentView(this, R.layout.activity_layout_capture)  生成binding对象得区别
+LayoutCommentDialogBinding.inflate(inflater, container, false)和DataBindingUtil.setContentView(this, R.layout.activity_layout_capture)  生成binding对象得区别
 
 getDimensionPixelOffset/getDimensionPixelSize/getDimension区别
 

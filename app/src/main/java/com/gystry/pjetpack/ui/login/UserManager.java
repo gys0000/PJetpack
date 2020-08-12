@@ -1,12 +1,20 @@
 package com.gystry.pjetpack.ui.login;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.gystry.libcommon.AppGlobal;
+import com.gystry.libnetwork.ApiResponse;
+import com.gystry.libnetwork.ApiService;
+import com.gystry.libnetwork.JsonCallback;
 import com.gystry.libnetwork.cache.CacheManager;
 import com.gystry.pjetpack.model.User;
 
@@ -34,6 +42,35 @@ public class UserManager {
         if (userLiveData.hasObservers()) {
             userLiveData.postValue(user);
         }
+    }
+
+    public LiveData<User> refresh() {
+        if (!isLogin()) {
+            return login(AppGlobal.getApplication());
+        }
+        MutableLiveData<User> liveData = new MutableLiveData<>();
+        ApiService.get("/user/query")
+                .addParams("userId", getUserId())
+                .execute(new JsonCallback<User>() {
+                    @Override
+                    public void onSuccess(ApiResponse<User> response) {
+                        save(response.body);
+                        liveData.postValue(getUser());
+                    }
+
+                    @SuppressLint("RestrictedApi")
+                    @Override
+                    public void onError(ApiResponse<User> response) {
+                        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AppGlobal.getApplication(), response.message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        liveData.postValue(null);
+                    }
+                });
+        return liveData;
     }
 
     /**
@@ -68,4 +105,22 @@ public class UserManager {
         }
         return userLiveData;
     }
+
+    /**
+     * bugfix:  liveData默认情况下是支持黏性事件的，即之前已经发送了一条消息，当有新的observer注册进来的时候，也会把先前的消息发送给他，
+     * <p>
+     * 就造成了{@linkplain MainActivity#onNavigationItemSelected(MenuItem) }死循环
+     * <p>
+     * 那有两种解决方法
+     * 1.我们在退出登录的时候，把livedata置为空，或者将其内的数据置为null
+     * 2.利用我们改造的stickyLiveData来发送这个登录成功的事件
+     * <p>
+     * 我们选择第一种,把livedata置为空
+     */
+    public void logout() {
+        CacheManager.delete(KEY_CACHE_USER, mUser);
+        mUser = null;
+        userLiveData = null;
+    }
+
 }

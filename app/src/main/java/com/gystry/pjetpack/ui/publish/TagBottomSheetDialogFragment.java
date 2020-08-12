@@ -1,4 +1,4 @@
-package com.gystry.pjetpack.ui.mine;
+package com.gystry.pjetpack.ui.publish;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

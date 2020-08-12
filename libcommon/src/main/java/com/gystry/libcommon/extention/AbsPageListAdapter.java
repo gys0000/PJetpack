@@ -141,6 +141,27 @@ public abstract class AbsPageListAdapter<T, VH extends RecyclerView.ViewHolder> 
     protected abstract VH onCreateViewHolder2(ViewGroup parent, int viewType);
 
     @Override
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        if (!isHeaderPosition(holder.getAdapterPosition()) && !isFooterPosition(holder.getAdapterPosition())) {
+            this.onViewAttachedToWindow2((VH) holder);
+        }
+    }
+
+    public void onViewAttachedToWindow2(VH holder) {
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        if (!isHeaderPosition(holder.getAdapterPosition()) && !isFooterPosition(holder.getAdapterPosition())) {
+            this.onViewDetachedFromWindow2((VH) holder);
+        }
+    }
+
+    public void onViewDetachedFromWindow2(VH holder) {
+
+    }
+    @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         if (isHeaderPosition(position)||isFooterPosition(position)) {
             return;

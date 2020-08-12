@@ -61,6 +61,8 @@ public class TagListAdapter extends AbsPageListAdapter<TagList, TagListAdapter.V
         holder.itemBinding.actionFollow.setOnClickListener(v -> {
             InteractionPresenter.toggleTagLike(((LifecycleOwner) mContext), getItem(position));
         });
+
+        holder.itemView.setOnClickListener(v -> TagFeedListActivity.startActivity(mContext, getItem(position)));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
