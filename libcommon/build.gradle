@@ -92,4 +92,9 @@ dependencies {
 
     //workmanager
     api 'androidx.work:work-runtime:2.2.0'
+
+    //依赖协程核心库
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
+    //依赖当前平台所对应的平台库
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
 }
