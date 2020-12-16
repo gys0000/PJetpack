@@ -2,6 +2,7 @@ package com.gystry.pjetpack.recyclerview
 
 import android.content.Context
 import android.util.Log
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.item_ad.view.*
 import kotlinx.android.synthetic.main.item_student.view.*
 import kotlinx.android.synthetic.main.item_teacher.view.*
 
+
 /**
  * @author gystry
  * 创建日期：2020/12/15 15
@@ -24,6 +26,7 @@ class UserAdapter(context: Context, userList: ArrayList<User>) : RecyclerView.Ad
     private val layInflater by lazy { LayoutInflater.from(mContext) }
     private var mUserList: ArrayList<User> = userList
     private val mContext = context
+    public var caches = SparseArray<View>() //开发者自行维护的缓存
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -58,6 +61,7 @@ class UserAdapter(context: Context, userList: ArrayList<User>) : RecyclerView.Ad
             is AdViewHolder -> {
                 Log.i(TAG, "onBindViewHolder: VIEW_TYPE_ADVERTISING---${position}")
                 holder.bindView(mUserList[position], position)
+                caches.put(position, holder.itemView)
             }
         }
     }
