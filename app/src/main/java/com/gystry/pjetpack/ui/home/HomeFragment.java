@@ -51,39 +51,41 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     @Override
     public PagedListAdapter getAdapter() {
         feedType = getArguments() == null ? "all" : getArguments().getString("feedType");
-        return new FeedAdapter(getContext(), feedType) {
-            //检测当列表滑动的时候，内部的item进入和滑出屏幕
-            @Override
-            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                if (holder.isVideoItem()) {
-                    pageListPlayDetector.addTarget(holder.getListPlayerView());
-                }
-            }
 
-            @Override
-            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
-                super.onViewDetachedFromWindow(holder);
-                pageListPlayDetector.removeTarget(holder.getListPlayerView());
-            }
-
-            @Override
-            public void onStartFeedDetailActivity(Feed feed) {
-                boolean isVideo = feed.itemType == Feed.VIDEO_TYPE;
-                shouldPause = !isVideo;
-            }
-
-            @Override
-            public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
-                //这个方法是在我们每提交一次 pagelist对象到adapter就会触发一次
-                //每调用一次adapter.submitlist
-                if (previousList != null && currentList != null) {
-                    if (!currentList.containsAll(previousList)) {
-                        recyclerView.scrollToPosition(0);
-                    }
-                }
-            }
-        };
+        return null;
+//        return new FeedAdapter(getContext(), feedType) {
+//            //检测当列表滑动的时候，内部的item进入和滑出屏幕
+//            @Override
+//            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+//                super.onViewAttachedToWindow(holder);
+//                if (holder.isVideoItem()) {
+//                    pageListPlayDetector.addTarget(holder.getListPlayerView());
+//                }
+//            }
+//
+//            @Override
+//            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+//                super.onViewDetachedFromWindow(holder);
+//                pageListPlayDetector.removeTarget(holder.getListPlayerView());
+//            }
+//
+//            @Override
+//            public void onStartFeedDetailActivity(Feed feed) {
+//                boolean isVideo = feed.itemType == Feed.VIDEO_TYPE;
+//                shouldPause = !isVideo;
+//            }
+//
+//            @Override
+//            public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
+//                //这个方法是在我们每提交一次 pagelist对象到adapter就会触发一次
+//                //每调用一次adapter.submitlist
+//                if (previousList != null && currentList != null) {
+//                    if (!currentList.containsAll(previousList)) {
+//                        recyclerView.scrollToPosition(0);
+//                    }
+//                }
+//            }
+//        };
     }
 
     @Override

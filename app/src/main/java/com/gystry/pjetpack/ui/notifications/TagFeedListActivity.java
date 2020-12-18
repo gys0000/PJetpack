@@ -169,27 +169,28 @@ public class TagFeedListActivity extends AppCompatActivity implements View.OnCli
     }
 
     public PagedListAdapter getAdapter() {
-        return new FeedAdapter(this, KEY_FEED_TYPE) {
-            @Override
-            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
-                super.onViewDetachedFromWindow(holder);
-            }
-
-            @Override
-            public void onStartFeedDetailActivity(Feed feed) {
-                super.onStartFeedDetailActivity(feed);
-            }
-
-            @Override
-            public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
-                super.onCurrentListChanged(previousList, currentList);
-            }
-        };
+        return null;
+//        return new FeedAdapter(this, KEY_FEED_TYPE) {
+//            @Override
+//            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+//                super.onViewAttachedToWindow(holder);
+//            }
+//
+//            @Override
+//            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+//                super.onViewDetachedFromWindow(holder);
+//            }
+//
+//            @Override
+//            public void onStartFeedDetailActivity(Feed feed) {
+//                super.onStartFeedDetailActivity(feed);
+//            }
+//
+//            @Override
+//            public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
+//                super.onCurrentListChanged(previousList, currentList);
+//            }
+//        };
     }
 
     @Override

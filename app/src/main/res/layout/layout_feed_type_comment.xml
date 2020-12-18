@@ -43,9 +43,9 @@
             android:layout_marginBottom="@dimen/dimen_10"
             android:background="@color/color_gray2"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/dimen_16"
-            app:clip_radius="6dp"
-            app:clip_side="all">
+            android:paddingLeft="@dimen/dimen_16">
+<!--            app:clip_radius="6dp"-->
+<!--            app:clip_side="all">-->
 
             <TextView
                 android:layout_width="0dp"
@@ -68,9 +68,9 @@
                     image_url="@{feed.cover}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    app:clip_radius="6dp"
-                    app:clip_side="right"/>
+                    android:scaleType="centerCrop"/>
+<!--                    app:clip_radius="6dp"-->
+<!--                    app:clip_side="right"/>-->
 
                 <ImageView
                     android:id="@+id/icon_video"

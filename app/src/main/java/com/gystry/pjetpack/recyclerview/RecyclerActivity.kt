@@ -1,11 +1,14 @@
 package com.gystry.pjetpack.recyclerview
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.engine.Resource
 import com.gystry.pjetpack.R
 import com.gystry.pjetpack.utils.VIEW_TYPE_ADVERTISING
 import com.gystry.pjetpack.utils.VIEW_TYPE_STUDENT
@@ -43,6 +46,10 @@ class RecyclerActivity : AppCompatActivity() {
 
             }
         })
+
+        val pxVlaueapplyDimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150f, resources.displayMetrics)
+        val pxVlaueapplyDimensions = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150f, Resources.getSystem().displayMetrics)
+
     }
 
     companion object {
