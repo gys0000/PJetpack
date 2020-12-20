@@ -53,19 +53,19 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         feedType = getArguments() == null ? "all" : getArguments().getString("feedType");
         return new FeedAdapter(getContext(), feedType) {
             //检测当列表滑动的时候，内部的item进入和滑出屏幕
-            @Override
-            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                if (holder.isVideoItem()) {
-                    pageListPlayDetector.addTarget(holder.getListPlayerView());
-                }
-            }
+//            @Override
+//            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+//                super.onViewAttachedToWindow(holder);
+//                if (holder.isVideoItem()) {
+//                    pageListPlayDetector.addTarget(holder.getListPlayerView());
+//                }
+//            }
 
-            @Override
-            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
-                super.onViewDetachedFromWindow(holder);
-                pageListPlayDetector.removeTarget(holder.getListPlayerView());
-            }
+//            @Override
+//            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+//                super.onViewDetachedFromWindow(holder);
+//                pageListPlayDetector.removeTarget(holder.getListPlayerView());
+//            }
 
             @Override
             public void onStartFeedDetailActivity(Feed feed) {

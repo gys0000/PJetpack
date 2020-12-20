@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".recyclerview.RecyclerActivity">
+        <activity android:name="com.gystry.recyclerviewapp.recyclerview.RecyclerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

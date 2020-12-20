@@ -66,7 +66,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:onClick="@{()->InteractionPresenter.toggleCommentLike(owner,feed)}"
                 android:orientation="vertical">
 
                 <!--                在imageview中添加图片没有使用src是因为在imageview类中没有setSrc方法，那么databinding就没办法动态设置图片-->
