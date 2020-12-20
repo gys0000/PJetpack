@@ -41,7 +41,7 @@ public class FeedAdapter extends AbsPageListAdapter<Feed, FeedAdapter.ViewHolder
     protected Context context;
     protected final LayoutInflater inflater;
 
-    protected FeedAdapter(Context context, String category) {
+    public FeedAdapter(Context context, String category) {
         //diffCallback 数据做差分比较时的回调
         super(new DiffUtil.ItemCallback<Feed>() {
             @Override
