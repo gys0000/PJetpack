@@ -1,3 +1,4 @@
+include ':io'
 include ':customview'
 include ':recyclerviewapp'
 include ':libcommon'
