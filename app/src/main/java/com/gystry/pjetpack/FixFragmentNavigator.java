@@ -62,10 +62,12 @@ public class FixFragmentNavigator extends FragmentNavigator {
             ft.setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim);
         }
 
+        //通过FragmentManager获取当前正在显示的fragment,如果不为空，就隐藏当前正在显示的fragment
         Fragment fragment = manager.getPrimaryNavigationFragment();
         if (fragment!=null) {
             ft.hide(fragment);
         }
+        //然后寻找下一个fragment,通过destination的id寻找，如果不为空就显示，为空就创建然后显示
         Fragment frag=null;
         String tag = String.valueOf(destination.getId());
         frag=manager.findFragmentByTag(tag);

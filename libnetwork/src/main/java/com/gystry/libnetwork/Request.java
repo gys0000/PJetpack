@@ -106,6 +106,7 @@ public abstract class Request<T, R extends Request> implements Cloneable{
     }
 
     /**
+     * 参数中使用@CahceStrategy注解的作用是，这个方法被调用的时候，传的参数必须是这个注解限制的几种数据
      * @param cacheStrategy
      * @return
      */

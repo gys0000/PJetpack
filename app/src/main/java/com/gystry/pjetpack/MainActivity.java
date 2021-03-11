@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
         }
         navController.navigate(item.getItemId());
+        //返回值如果为false,那么就代表没有被选中，也就不会被着色。如果是true的话，就会被着色
         return !TextUtils.isEmpty(item.getTitle());
     }
 }

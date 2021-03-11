@@ -42,6 +42,7 @@ public class NavGraphBuilder {
                 destination.setClassName(value.claszName);
                 destination.setId(value.id);
                 destination.addDeepLink(value.pageUrl);
+                //destination对象就是一个个页面节点对象，然后destination对象需要添加到NavGraph对象中
                 navGraph.addDestination(destination);
             } else {
                 final ActivityNavigator.Destination destination = activityNavigator.createDestination();

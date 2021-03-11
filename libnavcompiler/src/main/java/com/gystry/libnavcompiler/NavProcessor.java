@@ -41,12 +41,15 @@ public class NavProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
+        //打印日志信息
         messager = processingEnvironment.getMessager();
+        //生成文件
         filer = processingEnvironment.getFiler();
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        //roundEnvironment.getElementsAnnotatedWith(FragmentDestination.class);返回一个集合
         Set<? extends Element> fragmentElements = roundEnvironment.getElementsAnnotatedWith(FragmentDestination.class);
         Set<? extends Element> activityElements = roundEnvironment.getElementsAnnotatedWith(ActivityDestination.class);
         if (!fragmentElements.isEmpty() || !activityElements.isEmpty()) {
@@ -54,8 +57,7 @@ public class NavProcessor extends AbstractProcessor {
             handleDestination(fragmentElements, FragmentDestination.class, destMap);
             handleDestination(activityElements, ActivityDestination.class, destMap);
 
-
-
+            //要把文件创建在 app/src/main/assets目录下，但是又不能直接定位到这个目录下。先能定位到app目录下，然后在app目录下创建文件。
             FileObject filerResource = null;
             try {
                 filerResource = filer.createResource(StandardLocation.CLASS_OUTPUT, "", OUTPUT_FILE_NAME);
@@ -91,6 +93,7 @@ public class NavProcessor extends AbstractProcessor {
 
     private void handleDestination(Set<? extends Element> elements, Class<? extends Annotation> annotationClaz, HashMap<String, JSONObject> destMap) {
         for (Element element : elements) {
+            //因为注解是直接标记在类上边的，可以直接转为TypeElement
             TypeElement typeElement = (TypeElement) element;
             String pageUrl = null;
             String claszName = typeElement.getQualifiedName().toString();

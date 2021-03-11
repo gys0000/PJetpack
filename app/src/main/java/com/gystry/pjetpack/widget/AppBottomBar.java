@@ -78,6 +78,7 @@ public class AppBottomBar extends BottomNavigationView {
 
             if (TextUtils.isEmpty(tab.title)) {
                 child.setIconTintList(ColorStateList.valueOf(Color.parseColor(tab.tintColor)));
+                //不让按钮点击的时候有上下浮动的效果
                 child.setShifting(false);
             }
         }
