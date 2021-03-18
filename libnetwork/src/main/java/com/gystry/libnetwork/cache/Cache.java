@@ -19,11 +19,13 @@ import java.util.Date;
  * 描述：Entity 注解的作用是将一个class对象映射成数据库中一个数据表
  */
 
-        //foreignKeys外键 这里将cache中的key和User中的id字段进行关联，并设置当cache中的key被删除和被更新时，user中的id的状态操作
+//foreignKeys外键 这里将cache中的key和User中的id字段进行关联，并设置当cache中的key被删除和被更新时，user中的id的状态操作
 //        ,foreignKeys = {@ForeignKey(entity = User.class,parentColumns = "id",childColumns = "key",onDelete = ForeignKey.RESTRICT,onUpdate = ForeignKey.RESTRICT)}
+//index注解 复合索引 加快query查询，对insert和update的速度有影响
+//@Entity(tableName = "cache",indices={@Index=(value="key","id"})
 @Entity(tableName = "cache")
 public class Cache implements Serializable {
-    //PrimaryKey 主键约束
+//    PrimaryKey 主键约束
     @PrimaryKey(autoGenerate = false)
     @NonNull
     public String key;

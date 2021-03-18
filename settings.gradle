@@ -1,3 +1,4 @@
+include ':libnetworkkt'
 include ':io'
 include ':customview'
 include ':recyclerviewapp'

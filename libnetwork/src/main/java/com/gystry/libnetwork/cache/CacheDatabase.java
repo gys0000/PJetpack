@@ -11,6 +11,7 @@ import com.gystry.libcommon.AppGlobal;
  * 创建日期：2020/7/7 15
  * 邮箱：gystry@163.com
  * 描述：  exportSchema = true 同意导出json文件，文件中包含所有的sql语句，和所有的数据
+ * 写成abstract是可以少写几个方法，
  */
 @Database(entities = {Cache.class}, version = 1,exportSchema = true)
 public abstract class CacheDatabase extends RoomDatabase {
@@ -27,6 +28,7 @@ public abstract class CacheDatabase extends RoomDatabase {
 //                .addCallback()
                 //设置查询的线程池
 //                .setQueryExecutor()
+                //
 //                .openHelperFactory()
                 //room的日志模式
 //                .setJournalMode()
