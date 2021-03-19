@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.gystry.libcommon.PixUtils;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
 import com.gystry.pjetpack.R;
 import com.gystry.pjetpack.model.TagList;
 import com.gystry.pjetpack.ui.login.UserManager;
@@ -72,7 +72,7 @@ public class TagBottomSheetDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void queryTagList() {
-        ApiService.get("/tag/queryTagList")
+        ApiService.INSTANCE.<List<TagList>>get("/tag/queryTagList")
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("pageCount", 100)
                 .addParams("tagId", 0).execute(new JsonCallback<List<TagList>>() {
@@ -80,8 +80,8 @@ public class TagBottomSheetDialogFragment extends BottomSheetDialogFragment {
             @Override
             public void onSuccess(ApiResponse<List<TagList>> response) {
                 super.onSuccess(response);
-                if (response.body != null) {
-                    List<TagList> list = response.body;
+                if (response.getBody() != null) {
+                    List<TagList> list = response.getBody();
                     mTagLists.addAll(list);
                     ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
                         @Override
@@ -98,7 +98,7 @@ public class TagBottomSheetDialogFragment extends BottomSheetDialogFragment {
                 ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getContext(), response.message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

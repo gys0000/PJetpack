@@ -13,9 +13,7 @@ import java.io.ObjectOutputStream
  */
 object CacheManager {
     fun <T> save(cacheKey: String, body: T){
-        val cache=Cache()
-        cache.key=cacheKey
-        cache.data= toByteArray(body)
+        val cache=Cache(cacheKey,toByteArray(body))
         CacheDatabase.getDataBase().getCache().save(cache)
     }
 
@@ -28,9 +26,7 @@ object CacheManager {
     }
 
     fun <T> delete(key:String,body:T){
-        val cache = Cache()
-        cache.data= toByteArray(body)
-        cache.key=key
+        val cache = Cache(key, toByteArray(body))
         CacheDatabase.getDataBase().getCache().delete(cache)
     }
 

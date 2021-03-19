@@ -9,12 +9,12 @@ import androidx.room.*
  * 描述：
  */
 @Dao
-interface CacheDao {
+open interface CacheDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(cache: Cache): Long
+   open fun save(cache: Cache): Long
 
-    @Query("select * from cache where 'key'=:key")
-    fun getCache(key: String): Cache?
+    @Query("select * from cache where `key`=:key")
+    open fun getCache(key: String): Cache?
 
 //    @RawQuery()
 //    fun getCacheBySql(key: String): Cache
@@ -24,8 +24,8 @@ interface CacheDao {
 //
 
     @Delete
-    fun delete(cache: Cache): Int
+    open fun delete(cache: Cache): Int
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(cache: Cache): Int
+    open fun update(cache: Cache): Int
 }

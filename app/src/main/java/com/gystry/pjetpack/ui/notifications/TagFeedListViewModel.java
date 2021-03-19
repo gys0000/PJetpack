@@ -6,8 +6,8 @@ import androidx.paging.DataSource;
 import androidx.paging.ItemKeyedDataSource;
 
 import com.alibaba.fastjson.TypeReference;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
 import com.gystry.pjetpack.AbsViewModel;
 import com.gystry.pjetpack.model.Feed;
 import com.gystry.pjetpack.ui.login.UserManager;
@@ -57,7 +57,7 @@ public class TagFeedListViewModel extends AbsViewModel<Feed> {
     }
 
     private void loadData(Integer feedId, ItemKeyedDataSource.LoadCallback<Feed> callback) {
-        ApiResponse<List<Feed>> response = ApiService.get("/feeds/queryHotFeedsList")
+        ApiResponse<List<Feed>> response = ApiService.INSTANCE.<List<Feed>>get("/feeds/queryHotFeedsList")
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("pageCount", 10)
                 .addParams("feedType", feedType)
@@ -66,7 +66,7 @@ public class TagFeedListViewModel extends AbsViewModel<Feed> {
                 }.getType())
                 .execute();
 
-        List<Feed> result = response.body == null ? Collections.emptyList() : response.body;
+        List<Feed> result = response.getBody() == null ? Collections.emptyList() : response.getBody();
         callback.onResult(result);
 
         if (feedId > 0) {

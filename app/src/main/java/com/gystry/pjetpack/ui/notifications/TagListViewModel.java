@@ -9,8 +9,8 @@ import androidx.paging.DataSource;
 import androidx.paging.ItemKeyedDataSource;
 
 import com.alibaba.fastjson.TypeReference;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
 import com.gystry.pjetpack.AbsViewModel;
 import com.gystry.pjetpack.model.TagList;
 import com.gystry.pjetpack.ui.login.UserManager;
@@ -57,7 +57,7 @@ public class TagListViewModel extends AbsViewModel<TagList> {
                 loadAfter.set(true);
             }
 
-            ApiResponse<List<TagList>> response = ApiService.get("/tag/queryTagList")
+            ApiResponse<List<TagList>> response = ApiService.INSTANCE.<List<TagList>>get("/tag/queryTagList")
                     .addParams("userId", UserManager.getInstance().getUserId())
                     .addParams("tagId", requestKey)
                     .addParams("tagType", tagType)
@@ -67,7 +67,7 @@ public class TagListViewModel extends AbsViewModel<TagList> {
                     }.getType())
                     .execute();
 
-            List<TagList> result = response.body == null ? Collections.emptyList() : response.body;
+            List<TagList> result = response.getBody() == null ? Collections.emptyList() : response.getBody();
             callback.onResult(result);
 
             if (requestKey > 0) {

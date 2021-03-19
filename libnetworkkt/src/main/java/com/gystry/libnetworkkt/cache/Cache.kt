@@ -12,11 +12,7 @@ import java.io.Serializable
  * 描述：
  */
 @Entity(tableName = "cache")
-class Cache : Serializable {
-
-    @PrimaryKey(autoGenerate = false)
-    @NonNull
-    public var key: String? = null
-
-   public var data: ByteArray? = null
-}
+data class Cache(@PrimaryKey(autoGenerate = false)
+                 @NonNull
+                 public var key: String,
+                 public var data: ByteArray?) : Serializable

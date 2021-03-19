@@ -29,9 +29,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.gystry.libcommon.FileUtils;
 import com.gystry.libcommon.LoadingDialog;
 import com.gystry.libnavannotation.ActivityDestination;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
 import com.gystry.pjetpack.R;
 import com.gystry.pjetpack.databinding.ActivityLayoutPublishBinding;
 import com.gystry.pjetpack.model.Feed;
@@ -177,7 +177,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void publishFeed() {
-        ApiService.post("/feeds/publish")
+        ApiService.INSTANCE.<JSONObject>post("/feeds/publish")
                 .addParams("coverUrl", coverUploadUrl)
                 .addParams("fileUrl", fileUploadUrl)
                 .addParams("fileWidth", width)
@@ -197,7 +197,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
                     @Override
                     public void onError(ApiResponse<JSONObject> response) {
-                        showToast(response.message);
+                        showToast(response.getMessage());
                         dismissLoading();
                     }
                 });

@@ -12,14 +12,14 @@ import com.gystry.libcommon.AppGlobal
  * 描述：
  */
 @Database(entities = [Cache::class], version = 1, exportSchema = true)
-abstract class CacheDatabase :RoomDatabase(){
+public abstract class CacheDatabase : RoomDatabase() {
 
     companion object {
-        public val database: CacheDatabase = Room.databaseBuilder(AppGlobal.getApplication(),
-                CacheDatabase::class.java,
-                "gystry_cache_kt")
-                .allowMainThreadQueries()
-                .build()
+        public val database: CacheDatabase =
+                Room.databaseBuilder(AppGlobal.getApplication(), CacheDatabase::class.java,
+                        "gystry_cache_kt")
+                        .allowMainThreadQueries()
+                        .build()
 
         public fun getDataBase(): CacheDatabase = database
     }

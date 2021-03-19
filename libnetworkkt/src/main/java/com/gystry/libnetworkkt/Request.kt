@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.IntDef
 import androidx.arch.core.executor.ArchTaskExecutor
+import com.alibaba.fastjson.JSONObject
 import com.gystry.libnetworkkt.cache.CacheManager
 import okhttp3.Call
 import okhttp3.Callback
@@ -23,7 +24,7 @@ import java.lang.reflect.Type
 
 abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
     protected val headers = HashMap<String, String>()
-    protected val params = HashMap<String, String>()
+    protected val params = HashMap<String, Any>()
 
     private var cacheKey: String? = null
 
@@ -40,7 +41,7 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
         return this as R
     }
 
-    public fun addParams(key: String, value: String?): R {
+    public fun addParams(key: String, value: Any?): R {
         if (value == null) {
             return this as R
         }
@@ -83,11 +84,12 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
     }
 
     @SuppressLint("RestrictedApi")
+    @JvmName("execute")
     public fun execute(callback: JsonCallback<T>?) {
         if (mCacheStrategy != NET_ONLY) {
             //缓存模式不是只使用网络，那么是可以使用本地缓存，那么就先把本地缓存拿出来使用
             ArchTaskExecutor.getIOThreadExecutor().execute{
-                var response = readCache()
+                val response = readCache()
                 callback?.onCacheSuccess(response)
             }
         }
@@ -214,7 +216,7 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
         }
     }
 
-    override fun clone(): Any {
-        return super.clone() as Request<T, R>
+    override public fun clone(): Request<*, *> {
+        return super.clone() as Request<*, *>
     }
 }

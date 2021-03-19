@@ -24,9 +24,9 @@ import com.gystry.libcommon.AppGlobal;
 import com.gystry.libcommon.FileUploadManager;
 import com.gystry.libcommon.FileUtils;
 import com.gystry.libcommon.LoadingDialog;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
 import com.gystry.pjetpack.R;
 import com.gystry.pjetpack.databinding.LayoutCommentDialogBinding;
 import com.gystry.pjetpack.model.Comment;
@@ -159,7 +159,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
 
     private void publish() {
         String commentText = mBinding.inputView.getText().toString();
-        ApiService.post("/comment/addComment")
+        ApiService.INSTANCE.<Comment>post("/comment/addComment")
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("itemId", itemId)
                 .addParams("commentText", commentText)
@@ -170,13 +170,13 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
                 .execute(new JsonCallback<Comment>() {
                     @Override
                     public void onSuccess(ApiResponse<Comment> response) {
-                        onCommentSuccess(response.body);
+                        onCommentSuccess(response.getBody());
                         dismissLoadingDialog();
                     }
 
                     @Override
                     public void onError(ApiResponse<Comment> response) {
-                        showToast("评论失败:" + response.message);
+                        showToast("评论失败:" + response.getMessage());
                         dismissLoadingDialog();
                     }
                 });

@@ -12,10 +12,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gystry.libcommon.AppGlobal;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
-import com.gystry.libnetwork.cache.CacheManager;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
+import com.gystry.libnetworkkt.cache.CacheManager;
 import com.gystry.pjetpack.model.User;
 
 public class UserManager {
@@ -29,7 +29,7 @@ public class UserManager {
     }
 
     private UserManager() {
-        User cache = (User) CacheManager.getCache(KEY_CACHE_USER);
+        User cache = (User) CacheManager.INSTANCE.getCache(KEY_CACHE_USER);
         if (cache!=null&&cache.expires_time>System.currentTimeMillis()) {
             mUser=cache;
         }
@@ -37,7 +37,7 @@ public class UserManager {
 
     public void save(User user) {
         mUser = user;
-        CacheManager.save(KEY_CACHE_USER, user);
+        CacheManager.INSTANCE.save(KEY_CACHE_USER, user);
         //先判断这个livedata有没有注册观察者，如果注册了观察者的话，就post出去了，如果没有注册的话，就没必要抛出去
         if (userLiveData.hasObservers()) {
             userLiveData.postValue(user);
@@ -49,12 +49,12 @@ public class UserManager {
             return login(AppGlobal.getApplication());
         }
         MutableLiveData<User> liveData = new MutableLiveData<>();
-        ApiService.get("/user/query")
+        ApiService.INSTANCE.<User>get("/user/query")
                 .addParams("userId", getUserId())
                 .execute(new JsonCallback<User>() {
                     @Override
                     public void onSuccess(ApiResponse<User> response) {
-                        save(response.body);
+                        save(response.getBody());
                         liveData.postValue(getUser());
                     }
 
@@ -64,7 +64,7 @@ public class UserManager {
                         ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(AppGlobal.getApplication(), response.message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AppGlobal.getApplication(), response.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                         liveData.postValue(null);
@@ -109,7 +109,7 @@ public class UserManager {
     /**
      * bugfix:  liveData默认情况下是支持黏性事件的，即之前已经发送了一条消息，当有新的observer注册进来的时候，也会把先前的消息发送给他，
      * <p>
-     * 就造成了{@linkplain MainActivity#onNavigationItemSelected(MenuItem) }死循环
+     * 就造成了{@linkplain #(MenuItem) }死循环
      * <p>
      * 那有两种解决方法
      * 1.我们在退出登录的时候，把livedata置为空，或者将其内的数据置为null
@@ -118,7 +118,7 @@ public class UserManager {
      * 我们选择第一种,把livedata置为空
      */
     public void logout() {
-        CacheManager.delete(KEY_CACHE_USER, mUser);
+        CacheManager.INSTANCE.delete(KEY_CACHE_USER, mUser);
         mUser = null;
         userLiveData = null;
     }

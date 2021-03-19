@@ -6,8 +6,8 @@ import androidx.paging.DataSource;
 import androidx.paging.ItemKeyedDataSource;
 
 import com.alibaba.fastjson.TypeReference;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
 import com.gystry.pjetpack.AbsViewModel;
 import com.gystry.pjetpack.model.Comment;
 import com.gystry.pjetpack.ui.login.UserManager;
@@ -46,7 +46,7 @@ public class FeedDetailViewModel extends AbsViewModel<Comment> {
         }
 
         private void loadData(int key, int requestedLoadSize, LoadCallback callback) {
-            ApiResponse<List<Comment>> response = ApiService.get("/comment/queryFeedComments")
+            ApiResponse<List<Comment>> response = ApiService.INSTANCE.<List<Comment>>get("/comment/queryFeedComments")
                     .addParams("id", key)
                     .addParams("itemId", itemId)
                     .addParams("userId", UserManager.getInstance().getUserId())
@@ -54,7 +54,7 @@ public class FeedDetailViewModel extends AbsViewModel<Comment> {
                     .responseType(new TypeReference<ArrayList<Comment>>() {
                     }.getType())
                     .execute();
-            List<Comment> body = response.body == null ? Collections.emptyList() : response.body;
+            List<Comment> body = response.getMessage() == null ? Collections.emptyList() : response.getBody();
             callback.onResult(body);
         }
 

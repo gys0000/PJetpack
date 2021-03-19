@@ -11,10 +11,11 @@ import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 
 import com.alibaba.fastjson.TypeReference;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
-import com.gystry.libnetwork.Request;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
+import com.gystry.libnetworkkt.NetConstKt;
+import com.gystry.libnetworkkt.Request;
 import com.gystry.pjetpack.AbsViewModel;
 import com.gystry.pjetpack.model.Feed;
 import com.gystry.pjetpack.ui.MutablePageKeyedDataSource;
@@ -78,7 +79,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             loadAfter.set(true);
         }
         Log.e("loadData", "----->" + mFeedType+":"+UserManager.getInstance().getUserId()+":"+key+":"+count);
-        Request request = ApiService.get("/feeds/queryHotFeedsList")
+        Request request = ApiService.INSTANCE.get("/feeds/queryHotFeedsList")
                 .addParams("feedType", mFeedType)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("feedId", key)
@@ -86,15 +87,15 @@ public class HomeViewModel extends AbsViewModel<Feed> {
                 .responseType(new TypeReference<ArrayList<Feed>>() {
                 }.getType());
         if (withCache) {
-            request.cacheStrategy(Request.CACHE_ONLY);
+            request.cacheStrategy(NetConstKt.CACHE_ONLY);
             //请求缓存数据的时候，开启一个新的线程，这样就不会阻塞接口的请求
             request.execute(new JsonCallback<List<Feed>>() {
                 @Override
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
-                    Log.e("onCacheSuccess", "onCacheSuccess" + response.body);
-                    if (response.body!=null) {
+                    Log.e("onCacheSuccess", "onCacheSuccess" + response.getBody());
+                    if (response.getBody()!=null) {
                         MutablePageKeyedDataSource dataSource = new MutablePageKeyedDataSource<Feed>();
-                        dataSource.data.addAll(response.body);
+                        dataSource.data.addAll(response.getBody());
 
                         PagedList<Feed> pagedList = dataSource.buildNewPagedList(config);
                         cacheLiveData.postValue(pagedList);
@@ -103,22 +104,18 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             });
         }
 
-        try {
-            Request netRequest = withCache ? request.clone() : request;
-            //设置缓存模式，如果当前是第一个数据的话，那么就应该是下拉刷新，就将网络请求的数据缓存下来，要不然就不缓存
-            netRequest.cacheStrategy(key == 0 ? Request.NET_CACHE : Request.NET_ONLY);
-            ApiResponse<List<Feed>> response = netRequest.execute();
-            Log.e("loadData", "onCacheSuccess" + response.body);
-            List<Feed> data = response.body == null ? Collections.emptyList() : response.body;
-            callback.onResult(data);
+        Request netRequest = withCache ? request.clone() : request;
+        //设置缓存模式，如果当前是第一个数据的话，那么就应该是下拉刷新，就将网络请求的数据缓存下来，要不然就不缓存
+        netRequest.cacheStrategy(key == 0 ? NetConstKt.NET_CACHE : NetConstKt.NET_ONLY);
+        ApiResponse<List<Feed>> response = netRequest.execute();
+        Log.e("loadData", "onCacheSuccess" + response.getBody());
+        List<Feed> data = response.getBody() == null ? Collections.emptyList() : response.getBody();
+        callback.onResult(data);
 
-            if (key > 0) {
-                //通过livedata发送数据，告诉ui层，是否应该主动关闭上拉加载分页的动画
-                getBoundaryPageData().postValue(data.size() > 0);
-                loadAfter.set(false);
-            }
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        if (key > 0) {
+            //通过livedata发送数据，告诉ui层，是否应该主动关闭上拉加载分页的动画
+            getBoundaryPageData().postValue(data.size() > 0);
+            loadAfter.set(false);
         }
 
 

@@ -2,7 +2,7 @@ package com.gystry.pjetpack;
 
 import android.app.Application;
 
-import com.gystry.libnetwork.ApiService;
+import com.gystry.libnetworkkt.ApiService;
 
 /**
  * @author gystry
@@ -16,6 +16,6 @@ public class PJApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //外网路径http://123.56.232.18:8080/serverdemo
-        ApiService.init("http://123.56.232.18:8080/serverdemo", null);
+        ApiService.INSTANCE.init("http://123.56.232.18:8080/serverdemo", null);
     }
 }

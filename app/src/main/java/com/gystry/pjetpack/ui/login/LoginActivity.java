@@ -7,9 +7,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
 import com.gystry.pjetpack.R;
 import com.gystry.pjetpack.model.User;
 import com.tencent.connect.UserInfo;
@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void save(String nickname, String avatar, String openid, long expires_time) {
-        ApiService.get("/user/insert")
+        ApiService.INSTANCE.<User>get("/user/insert")
                 .addParams("name",nickname)
                 .addParams("avatar",avatar)
                 .addParams("qqOpenId",openid)
@@ -122,8 +122,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .execute(new JsonCallback<User>() {
                     @Override
                     public void onSuccess(ApiResponse<User> response) {
-                        if (response.body!=null) {
-                            UserManager.getInstance().save(response.body);
+                        if (response.getBody()!=null) {
+                            UserManager.getInstance().save(response.getBody());
                         }else {
                             runOnUiThread(new Runnable() {
                                 @Override

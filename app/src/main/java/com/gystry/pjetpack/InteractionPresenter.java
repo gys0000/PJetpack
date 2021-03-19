@@ -16,9 +16,9 @@ import androidx.lifecycle.Observer;
 import com.alibaba.fastjson.JSONObject;
 import com.gystry.libcommon.AppGlobal;
 import com.gystry.libcommon.extention.LiveDataBus;
-import com.gystry.libnetwork.ApiResponse;
-import com.gystry.libnetwork.ApiService;
-import com.gystry.libnetwork.JsonCallback;
+import com.gystry.libnetworkkt.ApiResponse;
+import com.gystry.libnetworkkt.ApiService;
+import com.gystry.libnetworkkt.JsonCallback;
 import com.gystry.pjetpack.model.Comment;
 import com.gystry.pjetpack.model.Feed;
 import com.gystry.pjetpack.model.TagList;
@@ -26,6 +26,7 @@ import com.gystry.pjetpack.model.User;
 import com.gystry.pjetpack.ui.ShareDialog;
 import com.gystry.pjetpack.ui.login.UserManager;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 
 import java.util.Date;
@@ -62,14 +63,14 @@ public class InteractionPresenter {
     }
 
     private static void toggleFeedLikeInternal(Feed feed) {
-        ApiService.get(URL_TOGGLE_FEED_LIKE)
+        ApiService.INSTANCE.<JSONObject>get(URL_TOGGLE_FEED_LIKE)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("itemId", feed.itemId)
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean hasLiked = response.body.getBoolean("hasLiked");
+                        if (response.getBody() != null) {
+                            boolean hasLiked = response.getBody().getBoolean("hasLiked");
                             feed.getUgc().setHasLiked(hasLiked);
                             LiveDataBus.getInstance().with(DATA_FROM_INTERACTION).postValue(feed);
                         }
@@ -94,14 +95,14 @@ public class InteractionPresenter {
     }
 
     private static void toggleFeedDissInternal(Feed feed) {
-        ApiService.get(URL_TOGGLE_FEED_DISS)
+        ApiService.INSTANCE.<JSONObject>get(URL_TOGGLE_FEED_DISS)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("itemId", feed.itemId)
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean hasdiss = response.body.getBoolean("hasdiss");
+                        if (response.getBody() != null) {
+                            boolean hasdiss = response.getBody().getBoolean("hasdiss");
                             feed.getUgc().setHasdiss(hasdiss);
                         }
                     }
@@ -122,14 +123,14 @@ public class InteractionPresenter {
         shareDialog.setShareItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiService.get(URL_SHARE)
+                ApiService.INSTANCE.<JSONObject>get(URL_SHARE)
                         .addParams("itemId", feed.itemId)
                         .execute(new JsonCallback<JSONObject>() {
                             @Override
                             public void onSuccess(ApiResponse<JSONObject> response) {
                                 super.onSuccess(response);
-                                if (response.body != null) {
-                                    int count = response.body.getIntValue("count");
+                                if (response.getBody() != null) {
+                                    int count = response.getBody().getIntValue("count");
                                     feed.getUgc().setShareCount(count);
                                 }
                             }
@@ -155,14 +156,14 @@ public class InteractionPresenter {
     }
 
     private static void toggleCommentLikeInternal(Comment comment) {
-        ApiService.get(URL_TOGGLE_COMMENT_LIKE)
+        ApiService.INSTANCE.<JSONObject>get(URL_TOGGLE_COMMENT_LIKE)
                 .addParams("commentId", comment.commentId)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean hasLiked = response.body.getBooleanValue("hasLiked");
+                        if (response.getBody() != null) {
+                            boolean hasLiked = response.getBody().getBooleanValue("hasLiked");
                             comment.getUgc().setHasLiked(hasLiked);
 
                         }
@@ -187,14 +188,14 @@ public class InteractionPresenter {
     }
 
     private static void toggleFeedFavorite(Feed feed) {
-        ApiService.get("/ugc/toggleFavorite")
+        ApiService.INSTANCE.<JSONObject>get("/ugc/toggleFavorite")
                 .addParams("itemId", feed.itemId)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
+                        if (response.getBody() != null) {
+                            boolean hasFavorite = response.getBody().getBooleanValue("hasFavorite");
                             feed.getUgc().setHasFavorite(hasFavorite);
                             LiveDataBus.getInstance().with(DATA_FROM_INTERACTION).postValue(feed);
                         }
@@ -203,7 +204,7 @@ public class InteractionPresenter {
                     @Override
                     public void onError(ApiResponse<JSONObject> response) {
                         super.onError(response);
-                        showToast(response.message);
+                        showToast(response.getMessage());
                     }
                 });
     }
@@ -226,14 +227,14 @@ public class InteractionPresenter {
     }
 
     public static void toggleFollowUser(Feed feed) {
-        ApiService.get("/ugc/toggleUserFollow")
+        ApiService.INSTANCE.<JSONObject>get("/ugc/toggleUserFollow")
                 .addParams("followUserId", UserManager.getInstance().getUserId())
                 .addParams("userId", feed.author.userId)
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean hasFollow = response.body.getBooleanValue("hasLiked");
+                        if (response.getBody() != null) {
+                            boolean hasFollow = response.getBody().getBooleanValue("hasLiked");
                             feed.getAuthor().setHasFollow(hasFollow);
                             LiveDataBus.getInstance().with(DATA_FROM_INTERACTION).postValue(feed);
                         }
@@ -241,7 +242,7 @@ public class InteractionPresenter {
 
                     @Override
                     public void onError(ApiResponse<JSONObject> response) {
-                        showToast(response.message);
+                        showToast(response.getMessage());
                     }
                 });
     }
@@ -257,13 +258,13 @@ public class InteractionPresenter {
     }
 
     private static void deleteFeedInternal(MutableLiveData<Boolean> liveData, long itemId) {
-        ApiService.get("/feeds/deleteFeed")
+        ApiService.INSTANCE.<JSONObject>get("/feeds/deleteFeed")
                 .addParams("itemId", itemId)
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean success = response.body.getBoolean("result");
+                        if (response.getBody() != null) {
+                            boolean success = response.getBody().getBoolean("result");
                             liveData.postValue(success);
                             showToast("删除成功");
                         }
@@ -271,7 +272,7 @@ public class InteractionPresenter {
 
                     @Override
                     public void onError(ApiResponse<JSONObject> response) {
-                        showToast(response.message);
+                        showToast(response.getMessage());
                     }
                 });
     }
@@ -305,21 +306,21 @@ public class InteractionPresenter {
     }
 
     private static void toggleTagLikeInternal(TagList tagList) {
-        ApiService.get("/tag/toggleTagFollow")
+        ApiService.INSTANCE.<JSONObject>get("/tag/toggleTagFollow")
                 .addParams("tagId", tagList.tagId)
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            Boolean follow = response.body.getBoolean("hasFollow");
+                        if (response.getBody() != null) {
+                            Boolean follow = response.getBody().getBoolean("hasFollow");
                             tagList.setHasFollow(follow);
                         }
                     }
 
                     @Override
                     public void onError(ApiResponse<JSONObject> response) {
-                        showToast(response.message);
+                        showToast(response.getMessage());
                     }
                 });
     }
@@ -337,15 +338,15 @@ public class InteractionPresenter {
     }
 
     private static void deleteFeedCommentInternal(LiveData liveData, long itemId, long commentId) {
-        ApiService.get("/comment/deleteComment")
+        ApiService.INSTANCE.<JSONObject>get("/comment/deleteComment")
                 .addParams("userId", UserManager.getInstance().getUserId())
                 .addParams("commentId", commentId)
                 .addParams("itemId", itemId)
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        if (response.body != null) {
-                            boolean result = response.body.getBooleanValue("result");
+                        if (response.getBody() != null) {
+                            boolean result = response.getBody().getBooleanValue("result");
                             ((MutableLiveData) liveData).postValue(result);
                             showToast("评论删除成功");
                         }
@@ -353,7 +354,7 @@ public class InteractionPresenter {
 
                     @Override
                     public void onError(ApiResponse<JSONObject> response) {
-                        showToast(response.message);
+                        showToast(response.getMessage());
                     }
                 });
     }
