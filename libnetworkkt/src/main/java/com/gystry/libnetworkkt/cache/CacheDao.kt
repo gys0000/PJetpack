@@ -14,7 +14,7 @@ interface CacheDao {
     fun save(cache: Cache): Long
 
     @Query("select * from cache where 'key'=:key")
-    fun getCache(key: String): Cache
+    fun getCache(key: String): Cache?
 
 //    @RawQuery()
 //    fun getCacheBySql(key: String): Cache

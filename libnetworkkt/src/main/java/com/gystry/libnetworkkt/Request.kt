@@ -1,9 +1,11 @@
 package com.gystry.libnetworkkt
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.IntDef
 import androidx.arch.core.executor.ArchTaskExecutor
+import com.gystry.libnetworkkt.cache.CacheManager
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -92,10 +94,10 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
 
         if (mCacheStrategy != CACHE_ONLY) {
             //缓存模式不是只有缓存，那么就可以使用网络
-            getCall().enqueue(object :Callback{
+            getCall().enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     var apiResponse = ApiResponse<T>()
-                    apiResponse.message=e.message.toString()
+                    apiResponse.message = e.message.toString()
                     callback?.onError(apiResponse)
                 }
 
@@ -103,7 +105,7 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
                     var parsrResponse = parsrResponse(response, callback)
                     if (parsrResponse.success) {
                         callback?.onSuccess(parsrResponse)
-                    }else{
+                    } else {
                         callback?.onError(parsrResponse)
                     }
                 }
@@ -174,23 +176,27 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
         }else{
             cacheKey
         }
-        // TODO: 2021/3/18 将数据存到缓存到数据库中
+        CacheManager.save(key!!, body)
     }
 
     private fun readCache():ApiResponse<T>{
-      var key=  if (cacheKey.isNullOrEmpty()) {
+      val key=  if (cacheKey.isNullOrEmpty()) {
             generateCacheKey()
         }else{
             cacheKey
         }
-        //TODO 读取数据库中的缓存
+        var cache = CacheManager.getCache(key!!)
         val result=ApiResponse<T>()
+        result.success=true
+        result.status=304
+        result.message="缓存获取成功"
+        result.body=cache as T
         return result
     }
 
-    private fun generateCacheKey(): String? {
+    private fun generateCacheKey(): String {
         cacheKey =createUrlFromParams(mUrl, params)
-        return cacheKey
+        return cacheKey as String
     }
 
     private fun getCall(): okhttp3.Call {
