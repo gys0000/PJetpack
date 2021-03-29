@@ -5,6 +5,9 @@ dependencies {
     implementation project(':libnavannotation')
     implementation 'com.alibaba:fastjson:1.2.59'
     api 'com.google.auto.service:auto-service:1.0-rc4'
+    // gradle大于5之后需要自己加上以下代码,我自己现在的版本是6.1.1
+    //distributionUrl=https\://services.gradle.org/distributions/gradle-6.1.1-all.zip
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'
 }
 
 sourceCompatibility = "1.8"

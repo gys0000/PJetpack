@@ -1,3 +1,4 @@
+include ':appkt'
 include ':libnetworkkt'
 include ':io'
 include ':customview'
@@ -6,5 +7,5 @@ include ':libcommon'
 include ':libnetwork'
 include ':libnavcompiler'
 include ':libnavannotation'
-include ':app'
+//include ':app'
 rootProject.name = "PJetpack"

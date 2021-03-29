@@ -83,6 +83,8 @@ dependencies {
     //fastjson解析
     api 'com.alibaba:fastjson:1.2.59'
 
+    api 'com.google.code.gson:gson:2.8.6'
+
     //navigation 组件
     api 'androidx.navigation:navigation-fragment:2.2.2'
     api 'androidx.navigation:navigation-ui:2.2.2'

@@ -12,6 +12,7 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 import java.io.Serializable
+import java.lang.annotation.RetentionPolicy
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 

@@ -62,8 +62,9 @@ public class NavProcessor extends AbstractProcessor {
             try {
                 filerResource = filer.createResource(StandardLocation.CLASS_OUTPUT, "", OUTPUT_FILE_NAME);
                 String resourcePath = filerResource.toUri().getPath();
-                messager.printMessage(Diagnostic.Kind.NOTE, resourcePath + ":" + resourcePath.indexOf("app") + 4);
-                String appPath = resourcePath.substring(0, resourcePath.indexOf("app") + 4);
+                messager.printMessage(Diagnostic.Kind.NOTE, resourcePath + "--ceshishuchu--:" + resourcePath.indexOf("appkt"));
+                String appPath = resourcePath.substring(0, resourcePath.indexOf("appkt") + 5);
+                messager.printMessage(Diagnostic.Kind.NOTE, appPath + "--ceshishuchu--appPath--:" + resourcePath.indexOf("appkt"));
                 String assetsPath = appPath + "/src/main/assets";
 
                 File file = new File(assetsPath);
@@ -85,6 +86,7 @@ public class NavProcessor extends AbstractProcessor {
                     e.printStackTrace();
                 }
             } catch (IOException e) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "ceshishuchu---cuowu:" );
                 e.printStackTrace();
             }
         }
