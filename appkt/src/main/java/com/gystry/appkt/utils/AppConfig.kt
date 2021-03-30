@@ -61,11 +61,6 @@ fun parseFile(fileName: String): String {
     return buffer.toString()
 }
 
-fun dp2px(size: Int): Int {
-    val v: Float = AppGlobal.getApplication().resources.displayMetrics.density * size + 0.5f
-    return v.toInt()
-}
-
 fun getPageId(pageUrl: String): Int {
     val destConfig: HashMap<String, Destination> = getDestConfig()
     val destination = destConfig[pageUrl] ?: return -1

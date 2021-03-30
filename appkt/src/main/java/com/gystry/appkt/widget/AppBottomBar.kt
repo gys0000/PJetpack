@@ -13,9 +13,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.gystry.appkt.R
 import com.gystry.appkt.model.BottomBar
-import com.gystry.appkt.utils.dp2px
 import com.gystry.appkt.utils.getBottomBar
 import com.gystry.appkt.utils.getPageId
+import com.gystry.libcommon.PixUtils
 
 /**
  * @author gystry
@@ -62,7 +62,7 @@ class AppBottomBar @JvmOverloads constructor(context: Context, attrs: AttributeS
         // 设置按钮大小  然后给中间的大按钮设置颜色，然后设置点击不会有上下浮动
         for (i in tabs.indices) {
             val tab: BottomBar.Tabs = tabs[i]
-            val iconSize: Int = dp2px(tab.size)
+            val iconSize: Int = PixUtils.dp2px(tab.size)
             val childAt = getChildAt(0) as BottomNavigationMenuView
             val child = childAt.getChildAt(tab.index) as BottomNavigationItemView
             child.setIconSize(iconSize)
