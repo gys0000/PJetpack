@@ -66,11 +66,11 @@ class PpImageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     fun setImageUrl(imageUrl: String?) {
         setImageUrl(this, imageUrl!!, false)
     }
-    fun bind(widthPx: Int, heightPx: Int, marginLeft: Int, imgUrl: String) {
+   open fun bind(widthPx: Int, heightPx: Int, marginLeft: Int, imgUrl: String) {
         bind(widthPx, heightPx, marginLeft, PixUtils.getScreenWidth(), PixUtils.getScreenWidth(), imgUrl)
     }
 
-    fun bind(widthPx: Int, heightPx: Int, marginLeft: Int, maxWidth: Int, maxHeight: Int, imgUrl: String) {
+   open fun bind(widthPx: Int, heightPx: Int, marginLeft: Int, maxWidth: Int, maxHeight: Int, imgUrl: String) {
         if (widthPx <= 0 || heightPx <= 0) {
             Glide.with(this).load(imgUrl).into(object : SimpleTarget<Drawable>() {
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {

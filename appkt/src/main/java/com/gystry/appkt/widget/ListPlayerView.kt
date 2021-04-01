@@ -30,6 +30,9 @@ class ListPlayerView(context: Context, attrs: AttributeSet? = null, def: Int = 0
 
     }
 
+    /**
+     * category
+     */
     fun binData(category: String, widthPx: Int, heightPx: Int, coverUrl: String, videoUrl: String) {
         mCategory = category
         mVideoUrl = videoUrl
