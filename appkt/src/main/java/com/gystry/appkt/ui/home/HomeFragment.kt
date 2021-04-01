@@ -8,11 +8,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.gystry.appkt.R
+import com.gystry.appkt.model.Feed
+import com.gystry.appkt.ui.AbsListFragment
 import com.gystry.libnavannotation.FragmentDestination
+import com.scwang.smartrefresh.layout.api.RefreshLayout
 
 @FragmentDestination(pageUrl = "main/tabs/home",asStarter = true)
-class HomeFragment : Fragment() {
+class HomeFragment : AbsListFragment<Feed>() {
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -30,4 +35,18 @@ class HomeFragment : Fragment() {
         })
         return root
     }
+
+    override fun getAdapter(): PagedListAdapter<Feed, RecyclerView.ViewHolder> {
+       return Any() as PagedListAdapter<Feed, RecyclerView.ViewHolder>
+    }
+
+    override fun onLoadMore(refreshLayout: RefreshLayout) {
+        super.onLoadMore(refreshLayout)
+    }
+
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        super.onRefresh(refreshLayout)
+    }
+
+
 }
