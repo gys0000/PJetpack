@@ -1,0 +1,8 @@
+DataSource<Key,Value> 数据源
+    Key对应加载数据的条件信息，Value对应数据实体类
+
+PageKeyedDataSource<Key,Value>  适用于目标数据根据页信息请求数据的场景
+
+ItemKeyedDataSource<Key,Value> 适用于目标数据的加载依赖特定item的信息 比如列表滑动到最后一条的时候根据最后一条数据的信息加载后边的信息
+
+PositionalDataSource<Key,Value> 适用于目标数据总数固定，通过特定的位置加载数据
