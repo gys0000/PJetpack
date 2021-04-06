@@ -8,8 +8,11 @@ import androidx.paging.ItemKeyedDataSource
 import com.gystry.appkt.AbsViewModel
 import com.gystry.appkt.model.Feed
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class HomeViewModel : AbsViewModel<Feed>() {
+
+    private val loadAfter=AtomicBoolean(false)
 
     override fun createDataSource(): DataSource<Any, Feed> {
         TODO("Not yet implemented")
@@ -31,9 +34,17 @@ class HomeViewModel : AbsViewModel<Feed>() {
             callback.onResult(Collections.emptyList())
         }
 
-        override fun getKey(item: Feed): Int {
-            TODO("Not yet implemented")
+        override fun getKey(item: Feed): Int =item.id
         }
 
+    private fun loadData(key:Int,count:Int,callback:ItemKeyedDataSource.LoadCallback<Feed>){
+        if(key>0){
+            loadAfter.set(true)
+        }
     }
+
+    private fun loadAfter(id:Int,callback:ItemKeyedDataSource.LoadCallback<Feed>){
+
+    }
+
 }
