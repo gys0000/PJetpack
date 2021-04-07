@@ -14,10 +14,10 @@ import androidx.paging.PagedList
  * 描述：
  */
 abstract class AbsViewModel<T> : ViewModel() {
-    var createDataSource: DataSource<Any, T>? = null
+    var createDataSource: DataSource<Int, T>? = null
     val boundaryPageData
         get() = MutableLiveData<Boolean>()
-    private val config: PagedList.Config by lazy {
+    protected val config: PagedList.Config by lazy {
         PagedList.Config.Builder()
                 .setPageSize(10)
                 .setInitialLoadSizeHint(12)
@@ -44,16 +44,16 @@ abstract class AbsViewModel<T> : ViewModel() {
         }
     }
 
-    private val factory: DataSource.Factory<Any, T> by lazy {
-        object : DataSource.Factory<Any, T>() {
-            override fun create(): DataSource<Any, T> {
+    private val factory: DataSource.Factory<Int, T> by lazy {
+        object : DataSource.Factory<Int, T>() {
+            override fun create(): DataSource<Int, T> {
                 createDataSource = createDataSource()
-                return createDataSource as DataSource<Any, T>
+                return createDataSource as DataSource<Int, T>
             }
         }
     }
 
-    fun getDataSource():DataSource<Any, T>?{
+    fun getDataSource():DataSource<Int, T>?{
         return createDataSource
     }
 
@@ -64,5 +64,5 @@ abstract class AbsViewModel<T> : ViewModel() {
                 .build()
 
 
-    abstract fun createDataSource(): DataSource<Any, T>
+    abstract fun createDataSource(): DataSource<Int, T>
 }

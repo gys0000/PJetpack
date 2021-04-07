@@ -6,3 +6,8 @@ PageKeyedDataSource<Key,Value>  适用于目标数据根据页信息请求数据
 ItemKeyedDataSource<Key,Value> 适用于目标数据的加载依赖特定item的信息 比如列表滑动到最后一条的时候根据最后一条数据的信息加载后边的信息
 
 PositionalDataSource<Key,Value> 适用于目标数据总数固定，通过特定的位置加载数据
+
+泛型中，泛型类型不能混用，及时两个类型之间有继承关系，如果没用继承标记标记的话，不能混用
+例如
+这样就会报错
+val list:ArrayList<View> =ArrayList<TextView>()

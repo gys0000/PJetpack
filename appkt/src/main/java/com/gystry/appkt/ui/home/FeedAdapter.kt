@@ -19,7 +19,7 @@ import com.gystry.appkt.model.Feed.Companion.TYPE_IMAGE
  * 邮箱：gystry@163.com
  * 描述：DiffUtil.ItemCallback<Feed> 数据做差分异时候的回调对象
  */
-class FeedAdapter(context: Context,category: String) : PagedListAdapter<Feed, FeedAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Feed>() {
+class FeedAdapter(context: Context?, category: String) : PagedListAdapter<Feed, FeedAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Feed>() {
     override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
         //判断两个item是否是同一个，比如一个item中以id作为主要标识，那么两个item的id一样，就表示为一个item。
         return oldItem.id == newItem.id
@@ -31,7 +31,7 @@ class FeedAdapter(context: Context,category: String) : PagedListAdapter<Feed, Fe
 
 }) {
    public val mCategory:String=category
-    val inflate: LayoutInflater = LayoutInflater.from(context)
+    private val inflate: LayoutInflater = LayoutInflater.from(context)
 
     override fun getItemViewType(position: Int): Int {
         return getItem(position)?.itemType!!
@@ -50,7 +50,7 @@ class FeedAdapter(context: Context,category: String) : PagedListAdapter<Feed, Fe
         holder.bindData(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View, binding: ViewDataBinding) : RecyclerView.ViewHolder(itemView) {
+    open inner class ViewHolder(itemView: View, binding: ViewDataBinding) : RecyclerView.ViewHolder(itemView) {
 
         private val mBinding=binding
         fun bindData(item: Feed?) {
