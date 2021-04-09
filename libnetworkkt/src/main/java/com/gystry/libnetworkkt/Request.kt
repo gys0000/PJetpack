@@ -143,7 +143,7 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
         var result = ApiResponse<T>()
         var sConvert = ApiService.sConvert
         try {
-            var content = response.body.toString()
+            var content = response.body?.string()
             if (successful) {
                 if (callback != null) {
                     var type = callback.javaClass.genericSuperclass as ParameterizedType
@@ -156,6 +156,7 @@ abstract class Request<T, R : Request<T, R>>(url: String) : Cloneable {
                 }else{
                     Log.e("request", "parseResponse 无法解析")
                 }
+                message="成功"
             }else{
                 message=content
             }

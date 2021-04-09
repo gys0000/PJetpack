@@ -9,6 +9,6 @@ import java.lang.reflect.Type
  * 描述：
  */
 interface Convert<T> {
-    fun convert(content: String, type: Type): T?
+    fun convert(content: String?, type: Type): T?
     fun convert(content: String, claz: Class<*>): T?
 }

@@ -71,7 +71,7 @@ abstract class AbsListFragment<T, M : AbsViewModel<T>,V:RecyclerView.ViewHolder>
             val modelClaz = (argument as Class<*>).asSubclass(AbsViewModel::class.java)
             mViewModel = ViewModelProviders.of(this).get(modelClaz) as M
             mViewModel.pageData.observe(viewLifecycleOwner){
-                adapter.submitList(it)
+                submitList(it)
             }
             mViewModel.boundaryPageData.observe(viewLifecycleOwner){
                 finishRefresh(it)

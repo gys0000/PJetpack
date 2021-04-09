@@ -1,9 +1,6 @@
 package com.gystry.appkt.ui.home
 
-import android.view.View
-import android.widget.TextView
 import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.gystry.appkt.model.Feed
 import com.gystry.appkt.ui.AbsListFragment
 import com.gystry.libnavannotation.FragmentDestination

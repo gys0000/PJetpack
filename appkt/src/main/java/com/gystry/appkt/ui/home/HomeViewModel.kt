@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 class HomeViewModel : AbsViewModel<Feed>() {
 
     private val loadAfter = AtomicBoolean(false)
-    public var mFeedType: String? = null
+    private var mFeedType: String? = null
 
     @Volatile
     private var withCache = true
@@ -27,16 +27,18 @@ class HomeViewModel : AbsViewModel<Feed>() {
         return mDataSource
     }
 
-    val mDataSource = object : ItemKeyedDataSource<Int, Feed>() {
+    private val mDataSource = object : ItemKeyedDataSource<Int, Feed>() {
 
         override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Feed>) {
             //已经是在子线程了，所以没必要再开一个线程进行同步网络请求
             //加载初始化数据的
+            Log.e("HomeViewModel", "loadInitial: " )
             loadData(0, params.requestedLoadSize, callback)
             withCache = false
         }
 
         override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Feed>) {
+            Log.e("HomeViewModel", "loadAfter: " )
             //加载分页数据
             loadData(params.key, params.requestedLoadSize, callback)
         }
@@ -54,21 +56,32 @@ class HomeViewModel : AbsViewModel<Feed>() {
         if (key > 0) {
             loadAfter.set(true)
         }
-        var request = ApiService.get<ArrayList<Feed>>("/feeds/queryHotFeedsList")
+        val request = ApiService.get<ArrayList<Feed>>("/feeds/queryHotFeedsList")
                 .addParams("feedType", mFeedType)
                 .addParams("userId", UserManager.instance.getUserId())
                 .addParams("feedId", key)
                 .addParams("pageCount", count)
                 .responseType(object : TypeReference<ArrayList<Feed?>?>() {}.type)
         if (withCache) {
-            request.cacheStrategy(CACHE_ONLY)
+//            request.cacheStrategy(CACHE_ONLY)
+            request.cacheStrategy(NET_ONLY)
             //请求缓存数据的时候，开启一个新的线程，这样就不会阻塞接口的请求
             request.execute(object : JsonCallback<ArrayList<Feed>>() {
                 override fun onCacheSuccess(response: ApiResponse<ArrayList<Feed>>) {
-                    Log.d("TAG", "onCacheSuccess: ${response.body?.size}")
+                    Log.d("HomeViewModel", "onCacheSuccess: ${response.body?.size}")
                     if (response.body != null) {
 
                     }
+                }
+
+                override fun onError(response: ApiResponse<ArrayList<Feed>>?) {
+                    super.onError(response)
+                    Log.d("HomeViewModel", "onError: ${response}")
+                }
+
+                override fun onSuccess(response: ApiResponse<ArrayList<Feed>>?) {
+                    super.onSuccess(response)
+                    Log.d("HomeViewModel", "onSuccess: ${response}")
                 }
             })
         }
@@ -77,7 +90,8 @@ class HomeViewModel : AbsViewModel<Feed>() {
         //所以进行clone一下就行了
         val netRequest = if (withCache) request.clone() else request
         netRequest.cacheStrategy(if (key == 0) NET_CACHE else NET_ONLY)
-        var response:ApiResponse<List<Feed>> = netRequest.execute() as ApiResponse<List<Feed>>
+        val response:ApiResponse<List<Feed>> = netRequest.execute() as ApiResponse<List<Feed>>
+        Log.d("HomeViewModel", "loadData-response: ${response}")
         val data:List<Feed> =if (response.body==null) Collections.emptyList() else response.body as List<Feed>
         callback.onResult(data)
         if (key>0){
