@@ -32,6 +32,7 @@ class PpImageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         才会调用这个方法，false则是有一个参数就会调用这个方法
          */
         @BindingAdapter(value = ["image_url", "isCircle"], requireAll = true)
+        @JvmStatic
         public fun setImageUrl(view: PpImageView, imageUrl: String, isCircle: Boolean) {
             Glide.with(view).load(imageUrl).run {
                 if (isCircle) {
@@ -48,6 +49,7 @@ class PpImageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
 
         @BindingAdapter(value = ["image_url", "isCircle", "radius"], requireAll = false)
+        @JvmStatic
         fun setImageUrl(view: PpImageView, imageUrl: String?, isCircle: Boolean, radius: Int) {
             val builder = Glide.with(view).load(imageUrl)
             if (isCircle) {
