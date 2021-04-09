@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.layout_player_view.view.*
  * 邮箱：gystry@163.com
  * 描述：
  */
-class ListPlayerView(context: Context, attrs: AttributeSet? = null, def: Int = 0) : FrameLayout(context, attrs, def) {
+class ListPlayerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : FrameLayout(context, attrs, def) {
 
     private var mCategory: String? = null
     private var mVideoUrl: String? = null
@@ -27,7 +27,6 @@ class ListPlayerView(context: Context, attrs: AttributeSet? = null, def: Int = 0
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true)
-
     }
 
     /**
