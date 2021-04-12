@@ -7,13 +7,12 @@ import com.gystry.libnavannotation.FragmentDestination
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 
 @FragmentDestination(pageUrl = "main/tabs/home", asStarter = true)
-class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>() {
-
+class HomeFragment : AbsListFragment<Feed, HomeViewModel, FeedAdapter.ViewHolder>() {
 
     //这是在twoWork上的第一次提交 时间是16：16
     override fun getAdapter(): PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
-      val feedType=  if(arguments==null) "all" else requireArguments().getString("fedType")
-       return FeedAdapter(context, feedType!!)
+        val feedType = if (arguments == null) "all" else requireArguments().getString("fedType")
+        return FeedAdapter(context, feedType!!)
     }
     //这是在twoWork上的第二次提交 时间是16：19
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -23,10 +22,11 @@ class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>
     override fun onRefresh(refreshLayout: RefreshLayout) {
         super.onRefresh(refreshLayout)
     }
-
+    //这是master上的第二次提交   时间大约在16：20
 
     override fun afterCreateView() {
     }
 
+    //这是master上的第一次提交   时间大约在16：18
 
 }
