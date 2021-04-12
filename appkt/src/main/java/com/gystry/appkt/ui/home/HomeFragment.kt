@@ -23,6 +23,8 @@ class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>
         super.onRefresh(refreshLayout)
     }
 
+    //这事master上的第二次提交，时间大学在15：50
+
     override fun afterCreateView() {
     }
 
