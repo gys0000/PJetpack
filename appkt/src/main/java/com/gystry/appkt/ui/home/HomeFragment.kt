@@ -15,6 +15,7 @@ class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>
       val feedType=  if(arguments==null) "all" else requireArguments().getString("fedType")
        return FeedAdapter(context, feedType!!)
     }
+    //这是在twoWork上的第二次提交 时间是16：19
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         super.onLoadMore(refreshLayout)
     }
