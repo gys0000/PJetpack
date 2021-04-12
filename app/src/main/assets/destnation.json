@@ -1,0 +1,42 @@
+{
+  "main/tabs/dash": {
+    "isFragment": true,
+    "claszName": "com.gystry.pjetpack.ui.dashboard.DashboardFragment",
+    "asStater": false,
+    "needLogin": false,
+    "pageUrl": "main/tabs/dash",
+    "id": 863452203
+  },
+  "main/tabs/home": {
+    "isFragment": true,
+    "claszName": "com.gystry.pjetpack.ui.home.HomeFragment",
+    "asStater": true,
+    "needLogin": false,
+    "pageUrl": "main/tabs/home",
+    "id": 1169187497
+  },
+  "main/tabs/publish": {
+    "isFragment": false,
+    "claszName": "com.gystry.pjetpack.ui.publish.PublishActivity",
+    "asStater": false,
+    "needLogin": false,
+    "pageUrl": "main/tabs/publish",
+    "id": 1923866506
+  },
+  "main/tabs/my": {
+    "isFragment": true,
+    "claszName": "com.gystry.pjetpack.ui.mine.MineFragment",
+    "asStater": false,
+    "needLogin": false,
+    "pageUrl": "main/tabs/my",
+    "id": 2032702679
+  },
+  "main/tabs/notification": {
+    "isFragment": true,
+    "claszName": "com.gystry.pjetpack.ui.notifications.NotificationsFragment",
+    "asStater": false,
+    "needLogin": false,
+    "pageUrl": "main/tabs/notification",
+    "id": 1067933565
+  }
+}
