@@ -10,13 +10,11 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>() {
 
 
-    //这是在newwork上的第一次提交 时间是15：42
+    //这是在twoWork上的第一次提交 时间是16：16
     override fun getAdapter(): PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
       val feedType=  if(arguments==null) "all" else requireArguments().getString("fedType")
        return FeedAdapter(context, feedType!!)
     }
-
-    //这是在newwork上的第二次提交 时间是15：48
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         super.onLoadMore(refreshLayout)
     }
@@ -25,11 +23,9 @@ class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>
         super.onRefresh(refreshLayout)
     }
 
-    //这事master上的第二次提交，时间大学在15：50
 
     override fun afterCreateView() {
     }
 
-    //这是master上的第一次提交   时间大约在15：45
 
 }
