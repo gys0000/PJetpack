@@ -9,6 +9,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 @FragmentDestination(pageUrl = "main/tabs/home", asStarter = true)
 class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>() {
 
+    //这是在newwork上的第一次提交 时间是15：42
     override fun getAdapter(): PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
       val feedType=  if(arguments==null) "all" else requireArguments().getString("fedType")
        return FeedAdapter(context, feedType!!)
