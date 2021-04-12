@@ -1,8 +1,13 @@
 package com.gystry.appkt.ui.home
 
+import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
+import androidx.paging.ItemKeyedDataSource
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import com.gystry.appkt.model.Feed
 import com.gystry.appkt.ui.AbsListFragment
+import com.gystry.appkt.ui.MutablePageKeyedDataSource
 import com.gystry.libnavannotation.FragmentDestination
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 
@@ -14,14 +19,30 @@ class HomeFragment : AbsListFragment<Feed, HomeViewModel, FeedAdapter.ViewHolder
         return FeedAdapter(context, feedType!!)
     }
     override fun onLoadMore(refreshLayout: RefreshLayout) {
-        super.onLoadMore(refreshLayout)
+        val feed = getAdapter().currentList?.get(getAdapter().itemCount - 1)
+        mViewModel.loadAfter(feed?.id!!,object :ItemKeyedDataSource.LoadCallback<Feed>(){
+            override fun onResult(data: MutableList<Feed>) {
+                val config = getAdapter().currentList?.config
+                if (data!=null&&data.size>=0) {
+            val dataSource=MutablePageKeyedDataSource<Feed>()
+                    dataSource.data.addAll(data)
+                    val buildNewPagedList = dataSource.buildNewPagedList(config!!)
+                    mViewModel.cacheLiveData.postValue(buildNewPagedList)
+                }
+            }
+
+        })
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        super.onRefresh(refreshLayout)
+        //当下拉刷新的时候，调用datasource的invalidate
+        mViewModel.getDataSource()?.invalidate()
     }
 
     override fun afterCreateView() {
+        mViewModel.cacheLiveData.observe(this){
+            getAdapter().submitList(it)
+        }
     }
 
 }

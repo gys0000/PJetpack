@@ -3,12 +3,15 @@ package com.gystry.appkt.ui.home
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.arch.core.executor.ArchTaskExecutor
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.ItemKeyedDataSource
+import androidx.paging.PagedList
 import com.alibaba.fastjson.TypeReference
 import com.gystry.appkt.AbsViewModel
 import com.gystry.appkt.databinding.LayoutFeedAuthorBinding
 import com.gystry.appkt.model.Feed
+import com.gystry.appkt.ui.MutablePageKeyedDataSource
 import com.gystry.appkt.ui.login.UserManager
 import com.gystry.libnetworkkt.*
 import java.util.*
@@ -19,6 +22,8 @@ class HomeViewModel : AbsViewModel<Feed>() {
 
     private val loadAfter = AtomicBoolean(false)
     private var mFeedType: String? = null
+    val cacheLiveData
+             get()= MutableLiveData<PagedList<Feed>>()
 
     @Volatile
     private var withCache = true
@@ -32,13 +37,12 @@ class HomeViewModel : AbsViewModel<Feed>() {
         override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Feed>) {
             //已经是在子线程了，所以没必要再开一个线程进行同步网络请求
             //加载初始化数据的
-            Log.e("HomeViewModel", "loadInitial: " )
+            Log.e("HomeViewModel", "loadInitial: ")
             loadData(0, params.requestedLoadSize, callback)
             withCache = false
         }
 
         override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Feed>) {
-            Log.e("HomeViewModel", "loadAfter: " )
             //加载分页数据
             loadData(params.key, params.requestedLoadSize, callback)
         }
@@ -69,7 +73,11 @@ class HomeViewModel : AbsViewModel<Feed>() {
                 override fun onCacheSuccess(response: ApiResponse<ArrayList<Feed>>) {
                     Log.e("HomeViewModel", "onCacheSuccess: ${response.body?.size}")
                     if (response.body != null) {
-
+                        val dataSource = MutablePageKeyedDataSource<Feed>()
+                        dataSource.data.addAll(response.body!!)
+                        var buildNewPagedList = dataSource.buildNewPagedList(config)
+                        //一定是使用postvalue，因为这个当前是在子线程
+                        cacheLiveData.postValue(buildNewPagedList)
                     }
                 }
             })
@@ -79,17 +87,17 @@ class HomeViewModel : AbsViewModel<Feed>() {
         //所以进行clone一下就行了
         val netRequest = if (withCache) request.clone() else request
         netRequest.cacheStrategy(if (key == 0) NET_CACHE else NET_ONLY)
-        val response:ApiResponse<List<Feed>> = netRequest.execute() as ApiResponse<List<Feed>>
+        val response: ApiResponse<List<Feed>> = netRequest.execute() as ApiResponse<List<Feed>>
         Log.e("HomeViewModel", "loadData-response: ${response}")
-        val data:List<Feed> =if (response.body==null) Collections.emptyList() else response.body as List<Feed>
+        val data: List<Feed> = if (response.body == null) Collections.emptyList() else response.body as List<Feed>
         callback.onResult(data)
-        if (key>0){
+        if (key > 0) {
             boundaryPageData.postValue(data.isNotEmpty())
         }
     }
 
     @SuppressLint("RestrictedApi")
-    private fun loadAfter(id: Int, callback: ItemKeyedDataSource.LoadCallback<Feed>) {
+    public fun loadAfter(id: Int, callback: ItemKeyedDataSource.LoadCallback<Feed>) {
         if (loadAfter.get()) {
             callback.onResult(Collections.emptyList())
         }
