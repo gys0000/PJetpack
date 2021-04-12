@@ -15,6 +15,7 @@ class HomeFragment : AbsListFragment<Feed, HomeViewModel,FeedAdapter.ViewHolder>
        return FeedAdapter(context, feedType!!)
     }
 
+    //这是在newwork上的第二次提交 时间是15：48
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         super.onLoadMore(refreshLayout)
     }
