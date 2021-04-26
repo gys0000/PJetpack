@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.gystry.appkt.model.Feed
 
 /**
  * @author gystry
@@ -17,6 +18,8 @@ abstract class AbsViewModel<T> : ViewModel() {
     var createDataSource: DataSource<Int, T>? = null
     val boundaryPageData
         get() = MutableLiveData<Boolean>()
+    val cacheDataSource
+        get() = MutableLiveData<PagedList<Feed>>()
     protected val config: PagedList.Config by lazy {
         PagedList.Config.Builder()
                 .setPageSize(10)
