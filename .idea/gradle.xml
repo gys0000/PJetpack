@@ -12,6 +12,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/DesignModes" />
             <option value="$PROJECT_DIR$/appkt" />
             <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/io" />
@@ -21,6 +22,7 @@
             <option value="$PROJECT_DIR$/libnetwork" />
             <option value="$PROJECT_DIR$/libnetworkkt" />
             <option value="$PROJECT_DIR$/recyclerviewapp" />
+            <option value="$PROJECT_DIR$/threads" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

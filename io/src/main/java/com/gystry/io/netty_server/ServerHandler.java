@@ -5,6 +5,7 @@ import com.gystry.io.protocol.PacketCodeC;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.AttributeKey;
 
 /**
  * @author gystry
@@ -18,11 +19,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         ByteBuf requestByteBuf = (ByteBuf) msg;
         String decode2Str = PacketCodeC.INSTANCE.decode2Str(requestByteBuf);
 
-        System.out.println("接收到客户端消息--->：" + decode2Str + "------字节数据:" + requestByteBuf.toString() + ":" + ctx.channel().remoteAddress());
+        System.out.println("ServerHandler-接收到客户端消息--->：" + decode2Str + "------字节数据:" + requestByteBuf.toString() + ":" + ctx.channel().remoteAddress());
+        ctx.pipeline().channel().attr(AInBoundChannelHandler.signee).set("ServerHandlersdsddfdfd");
+//        ctx.pipeline().remove(AInBoundChannelHandler.class);
+        super.channelRead(ctx,msg);
         if (decode2Str.startsWith("re--")) {
             ByteBuf confirmMsg = PacketCodeC.INSTANCE.encodeStr2Byte(ctx.alloc(), "server confirm message");
             ctx.channel().writeAndFlush(confirmMsg);
-
         }
     }
 

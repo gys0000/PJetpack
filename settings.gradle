@@ -1,3 +1,5 @@
+include ':threads'
+include ':DesignModes'
 include ':appkt'
 include ':libnetworkkt'
 include ':io'

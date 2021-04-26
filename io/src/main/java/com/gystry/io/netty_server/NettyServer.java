@@ -6,6 +6,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
  * @author gystry
@@ -36,9 +37,13 @@ public class NettyServer {
 //                        });
 
                         nioSocketChannel.pipeline().addLast(new ServerHandler());
+                        nioSocketChannel.pipeline().addLast(new AInBoundChannelHandler());
+                        nioSocketChannel.pipeline().addLast(new BInBoundChannelHandler());
+                        nioSocketChannel.pipeline().addLast(new AOutboundChannelHandler());
+                        nioSocketChannel.pipeline().addLast(new BOutboundChannelHandler());
                     }
                 })
-                .bind(8000);
+                .bind(8001);
 
 
     }

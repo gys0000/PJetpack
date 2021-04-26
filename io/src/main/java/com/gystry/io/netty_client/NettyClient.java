@@ -65,7 +65,7 @@ public class NettyClient {
     private static int countdown =3;
 
     static void connect() {
-        channelFuture = bootstrap.connect("127.0.0.1", 8000).addListener(new ChannelFutureListener() {
+        channelFuture = bootstrap.connect("127.0.0.1", 8001).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 if (channelFuture.isSuccess()) {

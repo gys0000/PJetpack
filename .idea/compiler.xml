@@ -25,7 +25,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="DesignModes" target="1.7" />
       <module name="io" target="1.7" />
+      <module name="threads" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
