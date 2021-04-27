@@ -11,8 +11,10 @@ public class MyClass {
     public static void main(String[] args) {
 //        executors();
 //        callable();
-        RunnableTest runnableTest = new RunnableTest();
-        runnableTest.runTest();
+//        RunnableTest runnableTest = new RunnableTest();
+//        runnableTest.runTest();
+        WaitNotify waitNotify=new WaitNotify();
+        waitNotify.runTest();
     }
 
     private static void thread() {

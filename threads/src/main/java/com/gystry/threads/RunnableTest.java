@@ -1,5 +1,9 @@
 package com.gystry.threads;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * @author gystry
  * 创建日期：2021/4/26 17
@@ -8,6 +12,28 @@ package com.gystry.threads;
  */
 public class RunnableTest {
     private boolean isRun=true;
+    private int x=0;
+    ReentrantReadWriteLock lock=new ReentrantReadWriteLock();
+    Lock readLock=lock.readLock();
+    Lock writeLock=lock.writeLock();
+
+    private void count(){
+        writeLock.lock();
+        try {
+            x++;
+        }finally {
+            writeLock.unlock();
+        }
+    }
+
+    private void print(){
+        readLock.lock();
+        try {
+            System.out.println("---->"+x);
+        }finally {
+            readLock.unlock();
+        }
+    }
 
     private void stop(){
         isRun=false;
