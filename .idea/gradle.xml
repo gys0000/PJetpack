@@ -13,6 +13,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/DesignModes" />
+            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/appkt" />
             <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/io" />

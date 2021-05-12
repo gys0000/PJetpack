@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author gystry
  * 创建日期：2020/7/22 15
  * 邮箱：gystry@163.com
- * 描述：livedata实现的时间总线
+ * 描述：livedata实现的事件总线
  */
 public class LiveDataBus {
     private ConcurrentHashMap<String, StickyLiveData> mHashMap = new ConcurrentHashMap<>();
@@ -109,6 +109,7 @@ public class LiveDataBus {
                     if (sticky && tStickyLiveData.mStickyData != null) {
                         observer.onChanged(tStickyLiveData.mStickyData);
                     }
+                    return;
                 }
                 mLastVersion = tStickyLiveData.mVersion;
                 observer.onChanged(o);

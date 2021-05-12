@@ -1,11 +1,13 @@
 package com.gystry.pjetpack.widget;
 
 import android.annotation.SuppressLint;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -16,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.gystry.pjetpack.R;
+
+import java.util.concurrent.Executor;
 
 /**
  * @author gystry
